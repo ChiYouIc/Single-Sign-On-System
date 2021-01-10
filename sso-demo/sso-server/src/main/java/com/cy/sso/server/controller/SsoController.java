@@ -43,7 +43,6 @@ public class SsoController {
 			orginUrl = orginUrl.substring(orginUrl.indexOf("=") + 1);
 		}
 		System.out.println(referer);
-		String path = StringUtils.isEmpty(orginUrl) ? "/" : orginUrl;
 		String redirectUrl = StringUtils.isEmpty(orginUrl) ? "/main" : orginUrl;
 		// 校验密码
 		if ("123456".equals(userInfo.getPassword())) {
