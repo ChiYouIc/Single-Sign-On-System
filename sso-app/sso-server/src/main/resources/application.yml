@@ -1,0 +1,49 @@
+# 服务配置
+server:
+  servlet:
+    context-path: /
+  port: 8500
+
+# spring 配置
+spring:
+  # thymeleaf
+  thymeleaf:
+    prefix: classpath:/templates/
+    check-template-location: true
+    suffix: .html
+    encoding: UTF-8
+    mode: HTML5
+    cache: false
+    servlet:
+      content-type: text/html
+  mvc:
+    static-path-pattern: classpath:/static/**
+  datasource:
+    url: jdbc:mysql://localhost:3306/sso?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 123456
+    druid:
+      initial-size: 5 #连接池初始化大小
+      min-idle: 10 #最小空闲连接数
+      max-active: 20 #最大连接数
+      web-stat-filter:
+        exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*" #不统计这些请求数据
+      stat-view-servlet: #访问监控网页的登录用户名和密码
+        login-username: druid
+        login-password: druid
+
+# mybatis 配置
+mybatis:
+  # mybatis 接口映射 xml 文件路径
+  mapper-locations: classpath*:/mybatis/**/*Mapper.xml
+  # 搜索指定包别名
+  type-aliases-package: com.cy.sso.server.**.domain
+  # mybatis全局配置文件路径
+  configLocation: classpath:mybatis/mybatis-config.xml
+
+logging:
+  level:
+    #   配置打印sql到控制台
+    root: info
+    com.cy.sso.server: debug
