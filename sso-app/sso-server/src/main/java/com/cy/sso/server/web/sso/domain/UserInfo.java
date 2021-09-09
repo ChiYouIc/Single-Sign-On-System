@@ -1,5 +1,6 @@
 package com.cy.sso.server.web.sso.domain;
 
+import com.cy.sso.core.model.SsoUserInfo;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -14,21 +15,6 @@ import org.apache.ibatis.type.Alias;
 @Setter
 @ToString
 @Alias("userInfo")
-public class UserInfo {
-    private String id;
-
-    private String userId;
-
-    private String username;
-
-    private String password;
-
-    private String token;
-
-    private String phone;
-
-    private String email;
-
-    private int status;
+public class UserInfo extends SsoUserInfo {
 
 }

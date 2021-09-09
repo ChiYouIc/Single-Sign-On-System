@@ -1,13 +1,15 @@
 package com.cy.sso.core.config;
 
+import com.cy.sso.core.config.properties.SsoProperties;
 import com.cy.sso.core.interceptor.AuthInterceptor;
-import com.cy.sso.core.properties.SsoProperties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -28,12 +30,26 @@ public class SsoCoreConfig implements WebMvcConfigurer {
     protected final static String BASE_PACKAGE = "com.cy.sso.core";
 
     @Resource
+    private SsoProperties properties;
+
+    @Resource
     private AuthInterceptor authInterceptor;
+
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        logger.info("create sso core interceptor...");
+        logger.info("Add sso core interceptor AuthInterceptor.");
         registry.addInterceptor(authInterceptor)
-                .addPathPatterns("/**");
+                .addPathPatterns("/**")
+                .excludePathPatterns(
+                        "/error",
+                        "/logout");
+    }
+
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplateBuilder()
+                .rootUri(properties.getUrl())
+                .build();
     }
 }

@@ -1,0 +1,9 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+Application -> SsoServer: Authentication Request
+SsoServer --> Application: Authentication Response
+
+@enduml

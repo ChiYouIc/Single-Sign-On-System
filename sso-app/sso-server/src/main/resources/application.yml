@@ -1,11 +1,13 @@
 # 服务配置
 server:
   servlet:
-    context-path: /
+    context-path: /sso
   port: 8500
 
 # spring 配置
 spring:
+  profiles:
+    active: sso
   # thymeleaf
   thymeleaf:
     prefix: classpath:/templates/
@@ -19,10 +21,10 @@ spring:
   mvc:
     static-path-pattern: classpath:/static/**
   datasource:
-    url: jdbc:mysql://localhost:3306/sso?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://123.56.144.215:3306/sso-server?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
-    password: 123456
+    password: mysql-server
     druid:
       initial-size: 5 #连接池初始化大小
       min-idle: 10 #最小空闲连接数
@@ -32,6 +34,13 @@ spring:
       stat-view-servlet: #访问监控网页的登录用户名和密码
         login-username: druid
         login-password: druid
+  redis:
+    host: 123.56.144.215 # Redis服务器地址
+    #    host: localhost
+    database: 0 # Redis数据库索引（默认为0）
+    port: 6379 # Redis服务器连接端口
+    password: redis-server # Redis服务器连接密码（默认为空）
+    timeout: 300ms # 连接超时时间（毫秒）
 
 # mybatis 配置
 mybatis:
@@ -41,6 +50,15 @@ mybatis:
   type-aliases-package: com.cy.sso.server.**.domain
   # mybatis全局配置文件路径
   configLocation: classpath:mybatis/mybatis-config.xml
+
+# Jwt 配置
+jwt:
+  header: "Authorization" #token返回头部
+  tokenPrefix: "Bearer " #token前缀
+  iss: "SSO_SERVER"
+  secret: "qwertyuiop7418520" #密钥
+  expireTime: 1 #token有效时间 (分钟) 建议一小时以上
+
 
 logging:
   level:

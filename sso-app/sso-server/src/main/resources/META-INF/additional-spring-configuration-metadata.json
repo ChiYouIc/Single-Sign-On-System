@@ -1,0 +1,14 @@
+{
+  "properties": [
+    {
+      "name": "sso",
+      "type": "java.lang.Object",
+      "description": "Description for sso."
+    },
+    {
+      "name": "sso.exclude",
+      "type": "java.lang.String",
+      "description": "Description for sso.exclude."
+    }
+  ]
+}

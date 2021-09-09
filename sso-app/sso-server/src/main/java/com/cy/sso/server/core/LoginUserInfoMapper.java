@@ -1,29 +1,50 @@
 package com.cy.sso.server.core;
 
+import cn.hutool.core.util.ObjectUtil;
+import com.cy.sso.server.core.redis.IRedisService;
+import com.cy.sso.server.core.redis.impl.IRedisServiceImpl;
+import com.cy.sso.server.util.SpringUtil;
 import com.cy.sso.server.web.sso.domain.UserInfo;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import lombok.extern.slf4j.Slf4j;
 
 /**
- * @Author: 友叔
- * @Date: 2021/1/7 21:00
- * @Description: 已登录用户信息
+ * @author: 友叔
+ * @create: 2021/1/7 21:00
+ * @description: 已登录用户信息
  */
+@Slf4j
 public class LoginUserInfoMapper {
 
-	private final static Map<String, UserInfo> USER_INFO_MAP = new ConcurrentHashMap<>();
+    private static final ThreadLocal<UserInfo> contextHolder = new ThreadLocal();
 
-	public static void setUserInfoMap(String token, UserInfo userInfo) {
-		USER_INFO_MAP.put(token, userInfo);
-	}
+    private static IRedisService getRedisService() {
+        return SpringUtil.getBean(IRedisServiceImpl.class);
+    }
 
-	public static UserInfo getUserInfo(String token) {
-		return USER_INFO_MAP.get(token);
-	}
+    public static void setUserInfoMap(String token, UserInfo userInfo) {
+        getRedisService().set(token, userInfo);
+    }
 
-	public static void removeUserInfo(String token) {
-		USER_INFO_MAP.remove(token);
-	}
+    public static UserInfo getUserInfo(String token) {
+        UserInfo userInfo = (UserInfo) getRedisService().get(token);
+        if (ObjectUtil.isNotEmpty(userInfo)) {
+            contextHolder.set(userInfo);
+        }
+        log.info(contextHolder.toString());
+        return userInfo;
+    }
+
+    public static void removeUserInfo() {
+        getRedisService().del(getUserInfo().getToken());
+    }
+
+    public static void clearContextHolder() {
+        contextHolder.remove();
+    }
+
+    public static UserInfo getUserInfo() {
+        return contextHolder.get();
+    }
+
 
 }

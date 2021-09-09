@@ -1,23 +1,22 @@
 package com.cy.sso.server.web.sso.controller;
 
+import cn.hutool.core.util.StrUtil;
 import com.cy.sso.server.core.LoginUserInfoMapper;
 import com.cy.sso.server.util.CookieUtil;
 import com.cy.sso.server.web.sso.domain.UserInfo;
 import com.cy.sso.server.web.sso.service.ISsoService;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.thymeleaf.util.StringUtils;
 
 import javax.annotation.Resource;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -50,45 +49,17 @@ public class SsoController {
             originUrl = originUrl.substring(originUrl.indexOf("=") + 1);
         }
         log.info(referer);
-        String redirectUrl = StringUtils.isEmpty(originUrl) ? "/main" : originUrl;
+        // 如果没有 originUrl 参数，则默认跳转到系统 Sso-Server 后台管理
+        String redirectUrl = StrUtil.isEmpty(originUrl) ? "/main" : originUrl;
 
         // 校验密码
         if (ssoService.authentication(userInfo)) {
-            response.addCookie(this.tokenWrapper(userInfo));
-            return "redirect:" + redirectUrl;
+            String code = ssoService.generateAuthCode(userInfo);
+            String[] split = redirectUrl.split("\\?");
+            return "redirect:" + split[0] + "?code=" + code;
         }
-        return "redirect:/?" + redirectUrl;
+        return "redirect:/?originUrl=" + redirectUrl;
     }
 
-    @GetMapping("/main")
-    public String main(HttpServletRequest request) {
-        request.setAttribute("userInfo", LoginUserInfoMapper.getUserInfo(CookieUtil.getCookieValue("Authentication-Token")));
-        return "main";
-    }
-
-    /**
-     * 退出登陆
-     */
-    @GetMapping("/logout")
-    public String logout(HttpSession session) {
-        LoginUserInfoMapper.removeUserInfo(session.getId());
-        return "redirect:/";
-    }
-
-    /**
-     * 将 token 包装进 cookie
-     */
-    private Cookie tokenWrapper(UserInfo userInfo) {
-        String token = UUID.randomUUID().toString();
-        userInfo.setToken(token);
-        LoginUserInfoMapper.setUserInfoMap(token, userInfo);
-
-        Cookie cookie = new Cookie("Authentication-Token", token);
-        // cookie 要设置路径，有效时间
-        cookie.setPath("/");
-        cookie.setDomain("sso.com");
-        cookie.setMaxAge(60 * 60 * 24);
-        return cookie;
-    }
 
 }

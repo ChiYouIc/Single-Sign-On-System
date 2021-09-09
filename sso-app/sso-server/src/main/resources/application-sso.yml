@@ -1,0 +1,11 @@
+sso-core:
+  type: server
+
+sso-server:
+  exclude:
+    - /
+    - /login
+    - /error
+    - /auth
+    - /callback/**
+    - /static/**
