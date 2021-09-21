@@ -8,9 +8,9 @@ import java.util.StringJoiner;
  * @create: 2021-08-15 23:41
  **/
 public class SsoResult {
-    private String result;
+    private String result = "success";
 
-    private SsoUserInfo userInfo;
+    private SsoUser userInfo;
 
     public String getResult() {
         return result;
@@ -20,11 +20,11 @@ public class SsoResult {
         this.result = result;
     }
 
-    public SsoUserInfo getUserInfo() {
+    public SsoUser getUserInfo() {
         return userInfo;
     }
 
-    public void setUserInfo(SsoUserInfo userInfo) {
+    public void setUserInfo(SsoUser userInfo) {
         this.userInfo = userInfo;
     }
 

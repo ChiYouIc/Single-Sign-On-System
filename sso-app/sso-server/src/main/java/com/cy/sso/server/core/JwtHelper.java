@@ -1,15 +1,14 @@
 package com.cy.sso.server.core;
 
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.ObjectUtil;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.cy.sso.server.config.properties.JwtProperties;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.impl.DefaultClaims;
 import org.apache.tomcat.util.codec.binary.Base64;
 
 import java.util.Date;
@@ -50,9 +49,7 @@ public class JwtHelper {
      * @param claims 将添加到载荷部分的信息，例如用户名，用户ID
      * @return token
      */
-    public String encode(Map<String, Object> claims) {
-        claims = ObjectUtil.defaultIfNull(claims, MapUtil.newHashMap());
-
+    public String encode(DefaultClaims claims) {
         // 头信息
         Map<String, Object> headMap = MapUtil.newHashMap();
         headMap.put("alg", signatureAlgorithm.getValue());
@@ -89,7 +86,7 @@ public class JwtHelper {
      * @return claims 返回负荷部分的键值对
      */
     public Claims decode(String jwtToken) {
-
+        this.isVerify(jwtToken);
         // 得到 defaultParser
         return Jwts.parser()
                 // 设置签名的密钥

@@ -1,11 +1,13 @@
 package com.cy.sso.server.core.interceptor;
 
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
-import com.cy.sso.server.core.LoginUserInfoMapper;
+import com.cy.sso.core.utils.SsoUtil;
+import com.cy.sso.server.core.JwtHelper;
+import com.cy.sso.server.cache.IUserCacheService;
 import com.cy.sso.server.web.sso.domain.UserInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -17,9 +19,19 @@ import javax.servlet.http.HttpServletResponse;
  * @Date: 2021/1/7 20:00
  * @Description:
  */
+@Slf4j
+@Component
 public class TokenInvalidInterceptor implements HandlerInterceptor {
 
-    private final static Logger log = LoggerFactory.getLogger(TokenInvalidInterceptor.class);
+    private final JwtHelper jwtHelper;
+
+    private final IUserCacheService userCacheService;
+
+    @Autowired
+    public TokenInvalidInterceptor(JwtHelper jwtHelper, IUserCacheService userCacheService) {
+        this.jwtHelper = jwtHelper;
+        this.userCacheService = userCacheService;
+    }
 
     /**
      * 在请求处理之前进行调用（Controller方法调用之前）
@@ -28,11 +40,14 @@ public class TokenInvalidInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         log.info("access source url " + request.getRequestURI());
         String token = request.getHeader("Authentication-Token");
-        // 获取缓存好的已登录用户的信息
-        if (StrUtil.isNotEmpty(token)) {
-            UserInfo userInfo = LoginUserInfoMapper.getUserInfo(token);
-            return !ObjectUtil.isEmpty(userInfo);
+
+        // 验证 token 有效性
+        UserInfo userInfo = userCacheService.getUserInfo(token);
+        if (jwtHelper.isVerify(token) && ObjectUtil.isNotEmpty(userInfo)) {
+            SsoUtil.setInfo(userInfo);
+            return true;
         }
+
         // 没有登陆过，重定向去登陆
         response.sendRedirect("/");
         return false;
@@ -41,12 +56,5 @@ public class TokenInvalidInterceptor implements HandlerInterceptor {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         log.info("run postHandle() ...");
-    }
-
-    @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        // 清空当前线程变量
-        LoginUserInfoMapper.clearContextHolder();
-        log.info("run afterCompletion() ...");
     }
 }

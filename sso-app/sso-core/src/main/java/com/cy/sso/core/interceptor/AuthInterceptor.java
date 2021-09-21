@@ -4,6 +4,7 @@ import com.cy.sso.core.config.properties.ServerType;
 import com.cy.sso.core.config.properties.SsoProperties;
 import com.cy.sso.core.model.SsoResult;
 import com.cy.sso.core.utils.CoreUtil;
+import com.cy.sso.core.utils.SsoUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,13 @@ public class AuthInterceptor implements HandlerInterceptor {
         String uri = request.getRequestURI();
         logger.info("access resource url {}", uri);
         return this.handler.apply(request, response);
+    }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        // 清空当前线程变量
+        SsoUtil.remove();
+        logger.info("run afterCompletion() ...");
     }
 
     /**
@@ -90,8 +98,9 @@ public class AuthInterceptor implements HandlerInterceptor {
             logger.error("sso server source rejected access ...");
         }
         SsoResult body = responseEntity.getBody();
-        if (body.isSuccess()) {
+        if (body != null && body.isSuccess()) {
             logger.info("sso server access success ...");
+            SsoUtil.setInfo(body.getUserInfo());
             return true;
         }
 

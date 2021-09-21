@@ -15,6 +15,7 @@ spring:
     suffix: .html
     encoding: UTF-8
     mode: HTML5
+    # 浏览器是否缓存
     cache: false
     servlet:
       content-type: text/html
@@ -57,7 +58,7 @@ jwt:
   tokenPrefix: "Bearer " #token前缀
   iss: "SSO_SERVER"
   secret: "qwertyuiop7418520" #密钥
-  expireTime: 1 #token有效时间 (分钟) 建议一小时以上
+  expireTime: 3600000 #token有效时间 (分钟) 建议一小时以上
 
 
 logging:

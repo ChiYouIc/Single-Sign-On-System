@@ -3,9 +3,11 @@ package com.cy.sso.server.web.sso.controller;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.cy.sso.core.model.SsoResult;
-import com.cy.sso.server.core.LoginUserInfoMapper;
+import com.cy.sso.core.model.SsoUser;
+import com.cy.sso.core.utils.SsoUtil;
+import com.cy.sso.server.core.JwtHelper;
 import com.cy.sso.server.core.exception.InvalidCodeException;
-import com.cy.sso.server.core.redis.IRedisService;
+import com.cy.sso.server.cache.IUserCacheService;
 import com.cy.sso.server.core.response.UnifiedReturn;
 import com.cy.sso.server.web.sso.domain.UserInfo;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +26,10 @@ import javax.annotation.Resource;
 public class AuthController {
 
     @Resource
-    private IRedisService redisService;
+    private IUserCacheService userCacheService;
+
+    @Resource
+    private JwtHelper jwtHelper;
 
     @UnifiedReturn
     @GetMapping("/auth")
@@ -33,9 +38,8 @@ public class AuthController {
         // 校验 token
         if (token != null && token.length() > 0) {
             // 校验是否存在该 token
-            UserInfo userInfo = LoginUserInfoMapper.getUserInfo(token);
-            if (!ObjectUtil.isEmpty(userInfo)) {
-                ssoResult.setResult("success");
+            UserInfo userInfo = userCacheService.getUserInfo(token);
+            if (jwtHelper.isVerify(token) && ObjectUtil.isNotEmpty(userInfo)) {
                 ssoResult.setUserInfo(userInfo);
                 return ssoResult;
             }
@@ -45,8 +49,8 @@ public class AuthController {
     }
 
     @GetMapping("/currentUser")
-    public UserInfo currentUser() {
-        return LoginUserInfoMapper.getUserInfo();
+    public SsoUser currentUser() {
+        return SsoUtil.getInfo();
     }
 
     /**
@@ -57,11 +61,10 @@ public class AuthController {
      */
     @GetMapping("/callback/{code}")
     public String callback(@PathVariable("code") String code) throws InvalidCodeException {
-        String token = redisService.get(code, String.class);
+        String token = userCacheService.getToken(code);
         if (StrUtil.isEmpty(token)) {
             throw new InvalidCodeException();
         }
-        redisService.del(code);
         return token;
     }
 
@@ -70,7 +73,6 @@ public class AuthController {
      */
     @PostMapping("/logout")
     public String logout() {
-        LoginUserInfoMapper.removeUserInfo();
         return "redirect:/";
     }
 

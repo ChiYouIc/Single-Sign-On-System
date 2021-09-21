@@ -1,20 +1,21 @@
 package com.cy.sso.core.model;
 
-import java.util.StringJoiner;
+import java.io.Serializable;
 
 /**
  * @Author: 友叔
  * @Date: 2021/1/7 21:39
  * @Description: 用户信息
  */
-public class SsoUserInfo {
+public class SsoUser implements Serializable {
+
+    private static final long serialVersionUID = -5809782578272943999L;
+
     private String id;
 
     private String userId;
 
     private String username;
-
-    private String password;
 
     private String token;
 
@@ -46,14 +47,6 @@ public class SsoUserInfo {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getToken() {
@@ -90,15 +83,14 @@ public class SsoUserInfo {
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", SsoUserInfo.class.getSimpleName() + "[", "]")
-                .add("id='" + id + "'")
-                .add("userId='" + userId + "'")
-                .add("username='" + username + "'")
-                .add("password='" + password + "'")
-                .add("token='" + token + "'")
-                .add("phone='" + phone + "'")
-                .add("email='" + email + "'")
-                .add("status=" + status)
-                .toString();
+        return "SsoUser{" +
+                "id='" + id + '\'' +
+                ", userId='" + userId + '\'' +
+                ", username='" + username + '\'' +
+                ", token='" + token + '\'' +
+                ", phone='" + phone + '\'' +
+                ", email='" + email + '\'' +
+                ", status=" + status +
+                '}';
     }
 }

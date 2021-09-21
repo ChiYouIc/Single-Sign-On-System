@@ -1,5 +1,5 @@
 import {extend, ResponseError} from 'umi-request'
-import {getAuthenticationToken} from "@/utils/Tools";
+import {getAuthenticationToken, removeAuthenticationToken} from "@/utils/Tools";
 import {message} from "antd";
 
 const redirect = `http://localhost:8500/sso?originUrl=${window.location.href}`
@@ -14,7 +14,6 @@ const httpStatus = new Map([
  * @param error {ResponseError} 错误
  */
 function errorHandler(error: ResponseError) {
-  debugger
   const {response, data} = error;
   if (response) {
     const {status} = response
@@ -23,7 +22,8 @@ function errorHandler(error: ResponseError) {
       message.error(data.msg);
     }
     // 未认证，认证失败
-    else if (status === 400) {
+    else if (status === 400 || status === 401) {
+      removeAuthenticationToken()
       window.location.href = redirect
     }
     // 资源路径不存在
@@ -42,7 +42,7 @@ const requests = extend(
   {
     errorHandler,
     // 请求是否带上 cookie
-    credentials: 'include'
+    credentials: 'include',
   }
 );
 
@@ -67,11 +67,11 @@ requests.interceptors.request.use((url: string, options: any) => {
  * 响应拦截器
  */
 requests.interceptors.response.use(async (response: Response) => {
-  debugger
   const data = await response.clone().json();
   if (data) {
     // 未登录 400
     if (data.code === 400) {
+      removeAuthenticationToken()
       message.error("前往登录!")
       window.location.href = redirect
     }

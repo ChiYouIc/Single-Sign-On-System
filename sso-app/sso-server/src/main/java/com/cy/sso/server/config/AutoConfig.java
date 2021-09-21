@@ -40,11 +40,15 @@ public class AutoConfig implements WebMvcConfigurer {
     @Resource
     private JwtProperties jwtProperties;
 
+    @Resource
+    private TokenInvalidInterceptor tokenInvalidInterceptor;
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         log.info("Add sso core interceptor TokenInvalidInterceptor.");
+        // 配置过滤器
         List<String> exclude = ssoProperties.getExclude();
-        registry.addInterceptor(new TokenInvalidInterceptor())
+        registry.addInterceptor(tokenInvalidInterceptor)
                 .addPathPatterns(ssoProperties.getBasePath())
                 .excludePathPatterns(exclude.toArray(new String[]{}));
 
@@ -54,7 +58,7 @@ public class AutoConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler(ssoProperties.getResourcePath())
-                .addResourceLocations(ResourceUtils.CLASSPATH_URL_PREFIX + ssoProperties.getResourcePath());
+                .addResourceLocations( "classpath:/static/");
     }
 
     @Bean

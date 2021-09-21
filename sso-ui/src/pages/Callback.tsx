@@ -7,7 +7,6 @@ import {getAuthenticationToken, setAuthenticationToken} from "@/utils/Tools";
 const redirect = `http://localhost:8500/sso?originUrl=${window.location.href}`
 
 const callback = async (code: string, origin: string) => {
-  debugger
   getToken(code).then((res: any) => {
     setAuthenticationToken(res.data)
     history.push(origin)

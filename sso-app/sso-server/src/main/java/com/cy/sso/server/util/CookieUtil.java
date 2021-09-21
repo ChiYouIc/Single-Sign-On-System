@@ -1,6 +1,10 @@
 package com.cy.sso.server.util;
 
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.StrUtil;
+
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 
 /**
@@ -12,7 +16,17 @@ public class CookieUtil {
 
     public static String getCookieValue(String cookieName) {
         Cookie[] cookies = ServletUtils.getRequest().getCookies();
-        return Arrays.stream(cookies).filter(o -> cookieName.equals(o.getName())).findFirst().orElse(new Cookie(cookieName, null)).getValue();
+        if (ArrayUtil.isNotEmpty(cookies)) {
+            return Arrays.stream(cookies).filter(o -> cookieName.equals(o.getName())).findFirst().orElse(new Cookie(cookieName, null)).getValue();
+        }
+        return StrUtil.EMPTY;
     }
 
+    public static void addCookieValue(HttpServletResponse response, String key, String value) {
+        Cookie cookie = new Cookie(key, value);
+        // cookie.setDomain("/");
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(3600000);
+        response.addCookie(cookie);
+    }
 }

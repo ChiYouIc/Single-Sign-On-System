@@ -1,9 +1,8 @@
 package com.cy.sso.server.web.sso.domain;
 
-import com.cy.sso.core.model.SsoUserInfo;
+import com.cy.sso.core.model.SsoUser;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import org.apache.ibatis.type.Alias;
 
 /**
@@ -13,8 +12,8 @@ import org.apache.ibatis.type.Alias;
  */
 @Getter
 @Setter
-@ToString
 @Alias("userInfo")
-public class UserInfo extends SsoUserInfo {
-
+public class UserInfo extends SsoUser {
+    private String password;
+    private String originUrl;
 }

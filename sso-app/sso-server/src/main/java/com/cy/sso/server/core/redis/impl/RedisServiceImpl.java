@@ -1,10 +1,10 @@
 package com.cy.sso.server.core.redis.impl;
 
 import com.cy.sso.server.core.redis.IRedisService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -16,9 +16,9 @@ import java.util.concurrent.TimeUnit;
  * @Description: redis 操作实现类
  */
 @Service
-public class IRedisServiceImpl implements IRedisService {
+public class RedisServiceImpl implements IRedisService {
 
-    @Autowired
+    @Resource
     private RedisTemplate<String, Object> redisTemplate;
 
     @Override

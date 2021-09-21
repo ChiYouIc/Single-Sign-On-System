@@ -1,6 +1,7 @@
 package com.cy.sso.server.core.advice;
 
 import cn.hutool.core.exceptions.ExceptionUtil;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.cy.sso.server.core.exception.AbstractExceptionHandleAdvice;
 import com.cy.sso.server.core.exception.ApiException;
 import com.cy.sso.server.core.exception.InvalidCodeException;
@@ -46,6 +47,18 @@ public class GlobalExceptionHandleAdvice extends AbstractExceptionHandleAdvice i
         LOGGER.error(e.getMessage());
         e.printStackTrace();
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(TokenExpiredException.class)
+    public ResponseEntity<FailedResponse<Object>> handle(TokenExpiredException e) {
+        FailedResponse<Object> response = FailedResponse.builder()
+                .code(ErrorCodeEnum.UNAUTHORIZED.code())
+                .msg(ErrorCodeEnum.UNAUTHORIZED.msg())
+                .exception(ExceptionUtil.stacktraceToString(e))
+                .build();
+        LOGGER.error(e.getMessage());
+        e.printStackTrace();
+        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(Exception.class)

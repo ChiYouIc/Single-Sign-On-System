@@ -1,10 +1,10 @@
 package com.cy.sso.server.core.redis.impl;
 
 import com.cy.sso.server.core.redis.IRedisKeysService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.Set;
 
 /**
@@ -13,13 +13,13 @@ import java.util.Set;
  * @Description: Redis Key 操作封装Service 实体类
  */
 @Service
-public class IRedisKeysServiceImpl implements IRedisKeysService {
+public class RedisKeysServiceImpl implements IRedisKeysService {
 
-	@Autowired
-	private RedisTemplate<String, Object> redisTemplate;
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
 
-	@Override
-	public Set<String> getKeys(String pattern) {
-		return redisTemplate.keys(pattern);
-	}
+    @Override
+    public Set<String> getKeys(String pattern) {
+        return redisTemplate.keys(pattern);
+    }
 }

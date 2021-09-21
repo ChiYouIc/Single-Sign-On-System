@@ -14,14 +14,15 @@
 <div id="app">
     <fieldset>
         <legend><h1>SSO-单点登陆</h1></legend>
-        <form th:action="@{/login}" th:object="${userInfo}" method="post">
+        <form th:action="@{/login}" th:object="${loginParam}" method="post">
             <input id="username" name="username" type="text" th:field="*{username}" placeholder="请输出用户名"/>
             <br>
             <br>
-            <input id="password" name="password" type="password" th:field="*{password}" placeholder="请输入密码">
+            <input id="password" name="password" type="password" th:field="*{password}" placeholder="请输入密码"/>
             <br>
             <br>
-            <button onclick="login()">登陆</button>
+            <input id="originUrl" name="originUrl" hidden th:field="*{originUrl}" placeholder="请输入密码"/>
+            <button type="submit" onclick="login()">登陆</button>
         </form>
     </fieldset>
 </div>
@@ -37,11 +38,10 @@
         originUrl = origin.substr(origin.indexOf('=') + 1, origin.length)
     }
 
-
     function login() {
 
-        let username = $('#username').getAttribute('value');
-        let password = $('#password').getAttribute('value');
+        let username = $('#username').val();
+        let password = $('#password').val();
 
         console.log(username, password)
 
