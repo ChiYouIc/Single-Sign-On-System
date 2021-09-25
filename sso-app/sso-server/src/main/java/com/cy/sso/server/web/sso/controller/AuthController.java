@@ -5,15 +5,12 @@ import cn.hutool.core.util.StrUtil;
 import com.cy.sso.core.model.SsoResult;
 import com.cy.sso.core.model.SsoUser;
 import com.cy.sso.core.utils.SsoUtil;
+import com.cy.sso.server.cache.IUserCacheService;
 import com.cy.sso.server.core.JwtHelper;
 import com.cy.sso.server.core.exception.InvalidCodeException;
-import com.cy.sso.server.cache.IUserCacheService;
 import com.cy.sso.server.core.response.UnifiedReturn;
 import com.cy.sso.server.web.sso.domain.UserInfo;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -31,6 +28,10 @@ public class AuthController {
     @Resource
     private JwtHelper jwtHelper;
 
+    /**
+     * 验证token 有效性接口，主要是提供给 Sso-client 调用，
+     * 并且请求该接口不经过 TokenInvalidInterceptor（这个在拦截器配置文件中有声明）
+     */
     @UnifiedReturn
     @GetMapping("/auth")
     public SsoResult auth(String token) {
@@ -48,16 +49,16 @@ public class AuthController {
         return ssoResult;
     }
 
+    /**
+     * 获取当前用户信息
+     */
     @GetMapping("/currentUser")
     public SsoUser currentUser() {
         return SsoUtil.getInfo();
     }
 
     /**
-     * 验证 code 码，颁发 token
-     *
-     * @param code code码
-     * @return token
+     * 验证 code 码，获取 token 令牌
      */
     @GetMapping("/callback/{code}")
     public String callback(@PathVariable("code") String code) throws InvalidCodeException {
@@ -72,7 +73,8 @@ public class AuthController {
      * 退出登陆
      */
     @PostMapping("/logout")
-    public String logout() {
+    public String logout(@CookieValue("auth-key") String authKey) {
+        userCacheService.delAuthKeyToken(authKey);
         return "redirect:/";
     }
 

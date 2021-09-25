@@ -1,5 +1,6 @@
 package com.cy.sso.server.web.sso.domain;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -18,4 +19,14 @@ public class LoginParam {
     private String username;
     private String password;
     private String originUrl;
+
+    private String msg;
+
+    @Setter(value = AccessLevel.NONE)
+    private Integer code;
+
+    public void setCode(Integer code) {
+        this.msg = code == 400 ? "用户名或密码错误！" : null;
+        this.code = code;
+    }
 }

@@ -16,6 +16,8 @@ import javax.servlet.http.HttpSession;
 import java.util.UUID;
 
 /**
+ * 单点登录验证业务 Service 实现
+ *
  * @author: 开水白菜
  * @description: Sso 业务 Service
  * @create: 2021-08-08 15:29

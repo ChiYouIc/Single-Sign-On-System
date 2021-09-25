@@ -2,15 +2,14 @@ package com.cy.sso.server.core.interceptor;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.cy.sso.core.utils.SsoUtil;
-import com.cy.sso.server.core.JwtHelper;
 import com.cy.sso.server.cache.IUserCacheService;
+import com.cy.sso.server.core.JwtHelper;
 import com.cy.sso.server.web.sso.domain.UserInfo;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.ModelAndView;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -19,26 +18,21 @@ import javax.servlet.http.HttpServletResponse;
  * @Date: 2021/1/7 20:00
  * @Description:
  */
-@Slf4j
 @Component
-public class TokenInvalidInterceptor implements HandlerInterceptor {
+public class TokenInvalidInterceptor implements HandlerInterceptor, Ordered {
 
-    private final JwtHelper jwtHelper;
+    @Resource
+    private JwtHelper jwtHelper;
 
-    private final IUserCacheService userCacheService;
-
-    @Autowired
-    public TokenInvalidInterceptor(JwtHelper jwtHelper, IUserCacheService userCacheService) {
-        this.jwtHelper = jwtHelper;
-        this.userCacheService = userCacheService;
-    }
+    @Resource
+    private IUserCacheService userCacheService;
 
     /**
-     * 在请求处理之前进行调用（Controller方法调用之前）
+     * <p>验证当前请求用户令牌有效性，如果没有令牌或者是令牌失效，则直接重定向到登录首页；
+     * <p>如果用户令牌有效，绑定一个用户信息的当前线程变量，前往一下个执行链（返回 true）
      */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        log.info("access source url " + request.getRequestURI());
         String token = request.getHeader("Authentication-Token");
 
         // 验证 token 有效性
@@ -54,7 +48,7 @@ public class TokenInvalidInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        log.info("run postHandle() ...");
+    public int getOrder() {
+        return 90;
     }
 }

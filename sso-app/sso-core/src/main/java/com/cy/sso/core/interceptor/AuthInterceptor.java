@@ -8,6 +8,7 @@ import com.cy.sso.core.utils.SsoUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.PriorityOrdered;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -24,10 +25,9 @@ import java.util.function.BiFunction;
  * @Description: 拦截器
  */
 @Component
-public class AuthInterceptor implements HandlerInterceptor {
+public class AuthInterceptor implements HandlerInterceptor, PriorityOrdered {
 
     private final static Logger logger = LoggerFactory.getLogger(AuthInterceptor.class);
-
 
     private final BiFunction<HttpServletRequest, HttpServletResponse, Boolean> handler;
 
@@ -40,18 +40,21 @@ public class AuthInterceptor implements HandlerInterceptor {
         logger.info("The current service is Sso {}.", ssoProperties.getType().name());
     }
 
+    /**
+     * 区分当前服务类型（Sso-Server or Sso-Client）
+     */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        String uri = request.getRequestURI();
-        logger.info("access resource url {}", uri);
         return this.handler.apply(request, response);
     }
 
+    /**
+     * 清空当前线程变量
+     */
     @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         // 清空当前线程变量
         SsoUtil.remove();
-        logger.info("run afterCompletion() ...");
     }
 
     /**
@@ -107,5 +110,8 @@ public class AuthInterceptor implements HandlerInterceptor {
         return false;
     }
 
-
+    @Override
+    public int getOrder() {
+        return 50;
+    }
 }

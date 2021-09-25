@@ -25,8 +25,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 @RestControllerAdvice(annotations = {RestController.class})
 public class GlobalResponseAdvice implements ResponseBodyAdvice<Object> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(GlobalResponseAdvice.class);
-
     /**
      * 这个方法表示对哪些请求需要执行 beforeBodyWrite, 返回 true 执行，false 不执行
      *

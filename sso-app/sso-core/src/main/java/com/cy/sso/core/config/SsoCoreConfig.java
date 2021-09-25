@@ -35,7 +35,9 @@ public class SsoCoreConfig implements WebMvcConfigurer {
     @Resource
     private AuthInterceptor authInterceptor;
 
-
+    /**
+     * 配置拦截器 AuthInterceptor
+     */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         logger.info("Add sso core interceptor AuthInterceptor.");
@@ -46,6 +48,9 @@ public class SsoCoreConfig implements WebMvcConfigurer {
                         "/logout");
     }
 
+    /**
+     * 配置 RestTemplate
+     */
     @Bean
     public RestTemplate restTemplate() {
         return new RestTemplateBuilder()
