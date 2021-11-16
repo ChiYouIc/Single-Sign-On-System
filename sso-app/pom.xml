@@ -8,16 +8,40 @@
     <artifactId>sso-app</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+
     <modules>
         <module>sso-core</module>
         <module>sso-server</module>
         <module>sso-client-app-01</module>
     </modules>
 
+    <repositories>
+        <repository>
+            <id>rdc-releases</id>
+            <url>https://packages.aliyun.com/maven/repository/2137021-release-DoZlBN/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>rdc-snapshots</id>
+            <url>https://packages.aliyun.com/maven/repository/2137021-snapshot-Z6bWQ4/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
     <parent>
-        <artifactId>spring-boot-parent</artifactId>
-        <groupId>org.springframework.boot</groupId>
-        <version>2.3.2.RELEASE</version>
+        <groupId>cn.cy</groupId>
+        <artifactId>personal-start-dependencies</artifactId>
+        <version>1.0-SNAPSHOT</version>
         <relativePath/>
     </parent>
 

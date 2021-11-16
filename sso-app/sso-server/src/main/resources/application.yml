@@ -22,7 +22,7 @@ spring:
   mvc:
     static-path-pattern: classpath:/static/**
   datasource:
-    url: jdbc:mysql://123.56.144.215:3306/sso-server?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://123.56.144.215:3306/sso_server?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: mysql-server
@@ -48,7 +48,7 @@ mybatis:
   # mybatis 接口映射 xml 文件路径
   mapper-locations: classpath*:/mybatis/**/*Mapper.xml
   # 搜索指定包别名
-  type-aliases-package: com.cy.sso.server.**.domain
+  type-aliases-package: cn.cy.server.**.entity
   # mybatis全局配置文件路径
   configLocation: classpath:mybatis/mybatis-config.xml
 
@@ -65,4 +65,4 @@ logging:
   level:
     #   配置打印sql到控制台
     root: info
-    com.cy.sso.server: debug
+    cn.cy.server: debug

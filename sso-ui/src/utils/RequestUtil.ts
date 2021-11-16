@@ -1,8 +1,8 @@
-import {extend, ResponseError} from 'umi-request'
-import {getAuthenticationToken, removeAuthenticationToken} from "@/utils/Tools";
-import {message} from "antd";
+import { extend, ResponseError } from 'umi-request'
+import { getAuthenticationToken, removeAuthenticationToken } from "@/utils/Tools";
+import { message } from "antd";
 
-const redirect = `http://localhost:8500/sso?originUrl=${window.location.href}`
+const redirect = `http://localhost:8500/sso?originUrl=${window.location.origin}/codeCallback`
 
 const httpStatus = new Map([
   [404, "服务接口不存在！"],
@@ -14,9 +14,11 @@ const httpStatus = new Map([
  * @param error {ResponseError} 错误
  */
 function errorHandler(error: ResponseError) {
-  const {response, data} = error;
+  const { response, data } = error;
+
   if (response) {
-    const {status} = response
+    const { status } = response
+
     // 服务端错误
     if (status === 500) {
       message.error(data.msg);
@@ -50,32 +52,31 @@ const requests = extend(
  * 请求拦截器配置
  */
 requests.interceptors.request.use((url: string, options: any) => {
-    const token = getAuthenticationToken();
-    const headers = {
-      'Content-type': 'application/json',
-      'Accept': 'application/json',
-      'Authentication-Token': token
-    }
-    return ({
-      url,
-      options: {...options, headers}
-    });
+  const token = getAuthenticationToken();
+  const headers = {
+    // 'Content-type': 'application/json;charset=UTF-8',
+    'Accept': 'application/json',
+    'Authentication-Token': token
   }
+  return ({
+    // url: 'http://localhost:8500/sso' + url,
+    url,
+    options: { ...options, headers }
+  });
+}
 );
 
 /**
  * 响应拦截器
  */
 requests.interceptors.response.use(async (response: Response) => {
-  const data = await response.clone().json();
-  if (data) {
-    // 未登录 400
-    if (data.code === 400) {
-      removeAuthenticationToken()
-      message.error("前往登录!")
-      window.location.href = redirect
-    }
+  // 没有认证
+  if (response.status === 401) {
+    removeAuthenticationToken()
+    message.info("登录已过期!", 2.5, () => {window.location.href = redirect})
   }
+
+  // const data = await response.clone().json();
 
   return response;
 });

@@ -1,19 +1,19 @@
-import type {Settings as LayoutSettings} from '@ant-design/pro-layout';
-import {PageLoading} from '@ant-design/pro-layout';
-import type {RunTimeLayoutConfig} from 'umi';
-import {history, Link} from 'umi';
+import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
+import { PageLoading } from '@ant-design/pro-layout';
+import type { RunTimeLayoutConfig } from 'umi';
+import { history, Link } from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
-import {currentUser as queryCurrentUser} from './services/api';
-import {BookOutlined, LinkOutlined} from '@ant-design/icons';
-import {getAuthenticationToken} from "@/utils/Tools";
+import { currentUser as queryCurrentUser } from './services/login';
+import { BookOutlined, LinkOutlined } from '@ant-design/icons';
+import { getAuthenticationToken } from "@/utils/Tools";
 
 const isDev = process.env.NODE_ENV === 'development';
 const codeCallback = '/codeCallback';
 
 /** 获取用户信息比较慢的时候会展示一个 loading */
 export const initialStateConfig = {
-  loading: <PageLoading/>,
+  loading: <PageLoading />,
 };
 
 /**
@@ -29,6 +29,7 @@ export async function getInitialState(): Promise<{
       const msg = await queryCurrentUser();
       return msg.data;
     } catch (error) {
+      // removeAuthenticationToken()
       // history.push(codeCallback);
       return undefined;
     }
@@ -49,16 +50,16 @@ export async function getInitialState(): Promise<{
 }
 
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
-export const layout: RunTimeLayoutConfig = ({initialState}) => {
+export const layout: RunTimeLayoutConfig = ({ initialState }) => {
   return {
-    rightContentRender: () => <RightContent/>,
+    rightContentRender: () => <RightContent />,
     disableContentMargin: false,
     waterMarkProps: {
       content: initialState?.currentUser?.username,
     },
-    footerRender: () => <Footer/>,
+    footerRender: () => <Footer />,
     onPageChange: () => {
-      const {location} = history;
+      const { location } = history;
       if (!getAuthenticationToken() && location.pathname !== codeCallback) {
         history.push(codeCallback);
       }
@@ -66,11 +67,11 @@ export const layout: RunTimeLayoutConfig = ({initialState}) => {
     links: isDev
       ? [
         <Link to="/umi/plugin/openapi" target="_blank">
-          <LinkOutlined/>
+          <LinkOutlined />
           <span>OpenAPI 文档</span>
         </Link>,
         <Link to="/~docs">
-          <BookOutlined/>
+          <BookOutlined />
           <span>业务组件文档</span>
         </Link>,
       ]

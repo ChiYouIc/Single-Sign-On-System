@@ -9,7 +9,7 @@
 export default {
   dev: {
     '/api/': {
-      target: 'http://localhost:8501/app',
+      target: 'http://localhost:8500/sso',
       changeOrigin: true,
       pathRewrite: {'^/api/': ''},
     },

@@ -1,15 +1,11 @@
 package com.cy.sso.core.model;
 
-import java.io.Serializable;
-
 /**
  * @Author: 友叔
  * @Date: 2021/1/7 21:39
  * @Description: 用户信息
  */
-public class SsoUser implements Serializable {
-
-    private static final long serialVersionUID = -5809782578272943999L;
+public class SsoUser {
 
     private String id;
 

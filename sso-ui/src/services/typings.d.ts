@@ -2,11 +2,20 @@
 /* eslint-disable */
 
 declare namespace API {
+  type Result = {
+    code: number
+    data: object
+    total?: number
+    rows?: []
+  };
+
   type CurrentUser = {
+    id: number;
     username?: string;
-    avatar?: string;
     userId?: string;
     email?: string;
+    avatar?: string
+    status?: number;
     signature?: string;
     title?: string;
     group?: string;
@@ -30,8 +39,9 @@ declare namespace API {
   };
 
   type PageParams = {
-    current?: number;
     pageSize?: number;
+    current?: number;
+    keyword?: string;
   };
 
   type RuleListItem = {
