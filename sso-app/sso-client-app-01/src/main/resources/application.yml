@@ -4,6 +4,19 @@ server:
     context-path: /app
   port: 8501
 
+spring:
+  # thymeleaf
+  thymeleaf:
+    prefix: classpath:/templates/
+    check-template-location: true
+    suffix: .html
+    encoding: UTF-8
+    mode: HTML5
+    # 浏览器是否缓存
+    cache: false
+    servlet:
+      content-type: text/html
+
 # 单点配置
 sso-core:
   type: client
