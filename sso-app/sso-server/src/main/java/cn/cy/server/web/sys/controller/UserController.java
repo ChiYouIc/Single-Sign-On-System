@@ -39,6 +39,11 @@ public class UserController extends BaseController {
         return userService.insertUser(info);
     }
 
+    @PutMapping("/update")
+    public int update(@RequestBody User info) {
+        return userService.updateUser(info);
+    }
+
     /**
      * 开户
      */

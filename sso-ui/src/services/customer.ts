@@ -47,6 +47,20 @@ export async function addUserInfo(data: UserListItem, options?: { [key: string]:
 }
 
 /**
+ * 更新用户信息
+ * @param data 数据
+ * @param options 配置
+ * @returns 更新结果
+ */
+export async function updateUserInfo(data: UserListItem, options?: { [key: string]: any }) {
+  return requests<API.Result>('/api/sys/user/update', {
+    method: 'PUT',
+    data,
+    ...(options || {})
+  })
+}
+
+/**
  * 开启账户
  * @param userId 用户ID
  * @returns 开户结果

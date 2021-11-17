@@ -1,0 +1,10 @@
+@startuml 访问验证过程
+(*) --> "访问接口"
+if "Authentication-Token" then
+    --> [成功] "通过"
+else
+    -right-> [失败] "返回 401 状态"
+    -right-> "前端根据 401 状态码跳转到 login.html"
+    --> "login.html "
+endif
+@enduml

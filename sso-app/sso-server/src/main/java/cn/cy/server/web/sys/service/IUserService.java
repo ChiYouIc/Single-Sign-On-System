@@ -27,6 +27,13 @@ public interface IUserService {
     public int insertUser(User info);
 
     /**
+     * 更新用户信息
+     * @param info 用户信息
+     * @return 结果
+     */
+    public int updateUser(User info);
+
+    /**
      * 开启账户
      * @param userId 用户ID
      * @return 结果

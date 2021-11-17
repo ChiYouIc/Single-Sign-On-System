@@ -3,7 +3,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { Button, message } from 'antd';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import ProTable, { TableDropdown } from '@ant-design/pro-table';
-import { addUserInfo, userInfoPage, UserListItem, openAccount, closeAccount, resetPassword } from "@/services/customer";
+import { addUserInfo, userInfoPage, UserListItem, openAccount, closeAccount, resetPassword, updateUserInfo } from "@/services/customer";
 import UpdateForm from "./components/UpdateForm";
 import { PageContainer } from "@ant-design/pro-layout";
 
@@ -103,12 +103,24 @@ class CustomerList extends React.Component<any, CustomerListState> {
    * @param {UserListItem} user 用户信息
    */
   onFinish(user: UserListItem) {
-    addUserInfo(user).then(res => {
-      message.success('添加成功!');
-      // 意思：告诉编译器，this.actionRef 一定存在，不会为 null 或者 undefined，也就是表取反
-      this.actionRef!.reload();
-      this.setDrawerVisible(false);
-    });
+
+    if (user.id) {
+      updateUserInfo(user).then(res => {
+        message.success('更新成功!');
+        this.actionRef?.reload();
+        this.setDrawerVisible(false);
+      })
+    }
+    // 新增
+    else {
+      addUserInfo(user).then(res => {
+        message.success('添加成功!');
+        // 意思：告诉编译器，this.actionRef 一定存在，不会为 null 或者 undefined，也就是表取反
+        this.actionRef!.reload();
+        this.setDrawerVisible(false);
+      });
+    }
+
   }
 
   /**
@@ -175,12 +187,12 @@ class CustomerList extends React.Component<any, CustomerListState> {
             </Button>
           ]}
         />
-        <UpdateForm
+        {this.state.visible && <UpdateForm
           ref={this.updateFormRef}
           visible={this.state.visible}
           initForm={this.state.initForm}
           onClose={() => this.setDrawerVisible(false)}
-          onFinish={(values: UserListItem) => this.onFinish(values)} />
+          onFinish={(values: UserListItem) => this.onFinish(values)} />}
       </PageContainer>
     );
   }

@@ -1,0 +1,20 @@
+@startuml 登录验证过程
+
+(*) -> "login.html"
+if "POST /login" then
+--> [成功] "登录成功"
+--> [重定向] "http://xxxx.xx/codeCallback?code=xxxx"
+--> [使用 code 换取 token] "GET /callback/{code}"
+    if "校验 code" then
+     --> [有效] "返回 token"
+     --> [跳转] "http://xxxx.xx/welcome"
+     --> (*)
+    else 
+     -right-> [无效] "提示 code 无效"
+     --> [重定向] "login.html"
+    endif
+else
+--> [失败] "登录失败"
+--> [重定向] "login.html"
+endif
+@enduml

@@ -97,12 +97,12 @@ class UpdateForm extends React.Component<CustomerUpdateFormProps, UserListItem> 
           <Form.Item
             label='状态'
             name='status'
-            initialValue='0'
+            initialValue={0}
             rules={[{ required: true, message: '请选择状态.' }]}
           >
             <Select placeholder='请选择状态' allowClear>
-              <Select.Option value='0'>已注销</Select.Option>
-              <Select.Option value='1'>已开户</Select.Option>
+              <Select.Option value={0}>已注销</Select.Option>
+              <Select.Option value={1}>已开户</Select.Option>
             </Select>
           </Form.Item>
           <Form.Item {...tailLayout}>

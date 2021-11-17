@@ -34,6 +34,13 @@ public interface UserMapper {
     public int insertUser(User info);
 
     /**
+     * 更新用户信息
+     * @param info 用户信息
+     * @return 结果
+     */
+    public int updateUser(User info);
+
+    /**
      * 根据用户ID更新用户状态
      * @param userId 用户ID
      * @param status 状态

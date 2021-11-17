@@ -56,6 +56,7 @@ public class SsoController extends BaseController {
             }
 
             // 当前连接的用户认证无效
+            userCacheService.delAuthKeyToken(authKey);
             model.addAttribute("loginParam", param);
             return "index";
         }

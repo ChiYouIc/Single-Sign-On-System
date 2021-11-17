@@ -3,8 +3,9 @@ package cn.cy.server.web.sys.service.impl;
 import cn.cy.server.web.sys.entity.User;
 import cn.cy.server.web.sys.mapper.UserMapper;
 import cn.cy.server.web.sys.service.IUserService;
-import cn.cy.sso.model.SsoUser;
-import cn.cy.sso.utils.SsoUtil;
+import cn.cy.sso.utils.UserUtil;
+import cn.cy.web.exception.ApiAssert;
+import cn.cy.web.response.ErrorCodeEnum;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -28,10 +29,18 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public int insertUser(User info) {
-        SsoUser user = SsoUtil.getInfo();
-        info.setCreatedBy(user.getId());
+        info.setCreatedBy(UserUtil.id());
         info.setPassword("123456");
         return userMapper.insertUser(info);
+    }
+
+    @Override
+    public int updateUser(User info) {
+        ApiAssert.notNull(ErrorCodeEnum.BAD_REQUEST.convert("缺少主键ID或用户ID."), info.getId(), info.getUserId());
+        info.setUpdatedBy(UserUtil.id());
+        int row = userMapper.updateUser(info);
+        ApiAssert.isFalse(ErrorCodeEnum.BAD_SQL_UPDATE, row == 0);
+        return row;
     }
 
     @Override

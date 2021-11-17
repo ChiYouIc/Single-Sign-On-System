@@ -43,10 +43,31 @@
     </insert>
 
     <update id="updateStatusByUserId" parameterType="map">
-        update sso_user set status = #{status} where user_id = #{userId};
+        update sso_user
+        set status = #{status}
+        where user_id = #{userId};
     </update>
 
     <update id="resetPassword" parameterType="map">
-        update sso_user set password = #{password} where user_id = #{userId};
+        update sso_user
+        set password = #{password}
+        where user_id = #{userId};
+    </update>
+
+    <update id="updateUser">
+        update sso_user
+        <trim prefix="set" suffixOverrides=",">
+            <if test="username != null and username != ''">user_name = #{username},</if>
+            <if test="phone != null and phone != ''">phone = #{phone},</if>
+            <if test="email != null and email != ''">email = #{email},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="updatedBy != null">update_by = #{updatedBy},</if>
+            update_time = sysdate()
+        </trim>
+        where
+        <trim prefixOverrides="and">
+            <if test="id != null">and id = #{id}</if>
+            <if test="userId != null">and user_id = #{userId}</if>
+        </trim>
     </update>
 </mapper>

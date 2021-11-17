@@ -23,7 +23,7 @@
             <br>
             <input id="originUrl" name="originUrl" hidden th:field="*{originUrl}" placeholder="请输入密码"/>
             <p th:if="*{msg}" th:text="*{msg}" style="color: red;"></p>
-            <button type="button" onclick="login()">登陆</button>
+            <button type="submit">登陆</button>
         </form>
     </fieldset>
 </div>
@@ -47,7 +47,7 @@
         console.log(username, password)
 
         $.ajax({
-            url: '/login',
+            url: '/sso/login',
             type: 'POST',
             contentType: 'application/json;charset=utf-8',
             param: {"originUrl": originUrl},

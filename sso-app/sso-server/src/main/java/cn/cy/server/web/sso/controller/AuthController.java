@@ -8,10 +8,14 @@ import cn.cy.server.web.sso.entity.UserInfo;
 import cn.cy.sso.model.SsoResult;
 import cn.cy.sso.model.SsoUser;
 import cn.cy.sso.utils.SsoUtil;
+import cn.cy.sso.utils.UserUtil;
 import cn.cy.web.response.UnifiedReturn;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
@@ -38,15 +42,16 @@ public class AuthController extends BaseController {
     public SsoResult auth(String token) {
         SsoResult ssoResult = new SsoResult();
         // 校验 token
-        if (token != null && token.length() > 0) {
+        if (StrUtil.isNotEmpty(token)) {
             // 校验是否存在该 token
             UserInfo userInfo = userCacheService.getUserInfo(token);
             if (jwtHelper.isVerify(token) && ObjectUtil.isNotEmpty(userInfo)) {
+                ssoResult.setResult(SsoResult.Result.SUCCESS);
                 ssoResult.setUserInfo(userInfo);
                 return ssoResult;
             }
         }
-        ssoResult.setResult("fail");
+        ssoResult.setResult(SsoResult.Result.FAIL);
         return ssoResult;
     }
 
@@ -74,9 +79,9 @@ public class AuthController extends BaseController {
      * 退出登陆
      */
     @PostMapping("/logout")
-    public String logout(@CookieValue(value = "auth-key", defaultValue = StrUtil.EMPTY) String authKey) {
-        userCacheService.delAuthKeyToken(authKey);
-        return "redirect:/";
+    public String logout() {
+        userCacheService.delAuthKeyToken(UserUtil.authKey());
+        return "success";
     }
 
 }

@@ -50,6 +50,8 @@ public class SsoServiceImpl implements ISsoService {
         claims.put("id", info.getId());
         // 获取 token
         String token = jwtHelper.encode(claims);
+        info.setToken(token);
+        info.setAuthKey(session.getId());
         // 保存 sessionId - token
         userCacheService.setAuthKeyToken(session.getId(), token);
         userCacheService.setUserInfo(token, info);

@@ -3,6 +3,9 @@ package cn.cy.server.cache;
 import cn.cy.redis.service.IRedisService;
 import cn.cy.server.config.properties.JwtProperties;
 import cn.cy.server.web.sso.entity.UserInfo;
+import cn.cy.web.exception.ApiAssert;
+import cn.cy.web.response.ErrorCodeEnum;
+import cn.hutool.core.util.StrUtil;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -61,10 +64,15 @@ public class UserCacheServiceImpl implements IUserCacheService {
 
     @Override
     public void delAuthKeyToken(String authKey) {
+        ApiAssert.notNull(ErrorCodeEnum.BAD_REQUEST.convert("authKey 不能为空."), authKey);
+        
         String token = this.getAuthKeyToken(authKey);
+        if (StrUtil.isNotEmpty(token)) {
+            // 删除 token 与用户关系
+            this.delUserInfo(token);
+        }
+
         // 删除 authKey 与 token 关系
         redisService.del(authKey);
-        // 删除 token 与用户关系
-        this.delUserInfo(token);
     }
 }
