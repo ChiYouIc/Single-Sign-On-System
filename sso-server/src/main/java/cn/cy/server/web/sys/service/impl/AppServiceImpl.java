@@ -37,7 +37,6 @@ public class AppServiceImpl implements IAppService {
         String appName = app.getAppName();
         byte[] desEncode = EncryptUtils.desEncode(appName.getBytes(StandardCharsets.UTF_8));
         app.setAppCode(Base64.encode(desEncode));
-        // 创建应用码
         return appMapper.insertApp(app);
     }
 

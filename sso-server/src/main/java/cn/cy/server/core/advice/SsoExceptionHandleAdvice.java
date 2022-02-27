@@ -1,12 +1,11 @@
 package cn.cy.server.core.advice;
 
-import cn.cy.web.exception.ApiException;
+import cn.cy.server.core.exception.AbstractExceptionHandleAdvice;
+import cn.cy.server.core.exception.InvalidCodeException;
 import cn.cy.web.response.ErrorCodeEnum;
 import cn.cy.web.response.FailedResponse;
 import cn.hutool.core.exceptions.ExceptionUtil;
 import com.auth0.jwt.exceptions.TokenExpiredException;
-import cn.cy.server.core.exception.AbstractExceptionHandleAdvice;
-import cn.cy.server.core.exception.InvalidCodeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
@@ -21,12 +20,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
  * @Description: 全局异常处理
  */
 @ControllerAdvice
-public class ExceptionHandleAdvice extends AbstractExceptionHandleAdvice implements Ordered {
+public class SsoExceptionHandleAdvice extends AbstractExceptionHandleAdvice implements Ordered {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(ExceptionHandleAdvice.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(SsoExceptionHandleAdvice.class);
 
     @ExceptionHandler(InvalidCodeException.class)
-    public ResponseEntity<FailedResponse> handle(InvalidCodeException e) {
+    public ResponseEntity<FailedResponse> handleInvalidCodeException(InvalidCodeException e) {
         FailedResponse response = FailedResponse.builder()
                 .code(ErrorCodeEnum.UNAUTHORIZED.code())
                 .msg(ErrorCodeEnum.UNAUTHORIZED.msg())
@@ -37,20 +36,8 @@ public class ExceptionHandleAdvice extends AbstractExceptionHandleAdvice impleme
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(ApiException.class)
-    public ResponseEntity<FailedResponse> handle(ApiException e) {
-        FailedResponse response = FailedResponse.builder()
-                .code(e.getErrorCode().getCode())
-                .msg(e.getMessage())
-                .exception(ExceptionUtil.stacktraceToString(e))
-                .build();
-        LOGGER.error(e.getMessage());
-        e.printStackTrace();
-        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
     @ExceptionHandler(TokenExpiredException.class)
-    public ResponseEntity<FailedResponse> handle(TokenExpiredException e) {
+    public ResponseEntity<FailedResponse> handleTokenExpiredException(TokenExpiredException e) {
         FailedResponse response = FailedResponse.builder()
                 .code(ErrorCodeEnum.UNAUTHORIZED.code())
                 .msg(ErrorCodeEnum.UNAUTHORIZED.msg())
@@ -59,18 +46,6 @@ public class ExceptionHandleAdvice extends AbstractExceptionHandleAdvice impleme
         LOGGER.error(e.getMessage());
         e.printStackTrace();
         return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<FailedResponse> handle(Exception e) {
-        FailedResponse response = FailedResponse.builder()
-                .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .msg(e.getMessage())
-                .exception(ExceptionUtil.stacktraceToString(e))
-                .build();
-        LOGGER.error(e.getMessage());
-        e.printStackTrace();
-        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @Override
