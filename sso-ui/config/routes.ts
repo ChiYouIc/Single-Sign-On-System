@@ -5,25 +5,6 @@
     component: './Callback'
   },
   {
-    path: '/user',
-    layout: false,
-    routes: [
-      {
-        path: '/user',
-        routes: [
-          {
-            name: 'login',
-            path: '/user/login',
-            component: './user/Login',
-          },
-        ],
-      },
-      {
-        component: './404',
-      },
-    ],
-  },
-  {
     path: '/welcome',
     name: 'welcome',
     icon: 'smile',
@@ -34,6 +15,12 @@
     icon: 'table',
     path: '/customer',
     component: './CustomerList',
+  },
+  {
+    name: '应用列表',
+    icon: 'appstore',
+    path: '/app',
+    component: './AppList'
   },
   {
     path: '/',

@@ -1,11 +1,11 @@
-import React, { RefObject } from "react";
-import { PlusOutlined } from '@ant-design/icons';
-import { Button, message } from 'antd';
-import type { ActionType, ProColumns } from '@ant-design/pro-table';
-import ProTable, { TableDropdown } from '@ant-design/pro-table';
-import { addUserInfo, userInfoPage, UserListItem, openAccount, closeAccount, resetPassword, updateUserInfo } from "@/services/customer";
+import React, {RefObject} from "react";
+import {PlusOutlined} from '@ant-design/icons';
+import {Button, message} from 'antd';
+import type {ActionType, ProColumns} from '@ant-design/pro-table';
+import ProTable, {TableDropdown} from '@ant-design/pro-table';
+import {addUserInfo, closeAccount, openAccount, resetPassword, updateUserInfo, userInfoPage, UserListItem} from "@/services/customer";
 import UpdateForm from "./components/UpdateForm";
-import { PageContainer } from "@ant-design/pro-layout";
+import {PageContainer} from "@ant-design/pro-layout";
 
 export type CustomerListState = {
   visible: boolean;
@@ -72,7 +72,7 @@ class CustomerList extends React.Component<any, CustomerListState> {
           <TableDropdown
             key="actionGroup"
             menus={[
-              { key: 'resetPassword', name: '重置密码', onClick: () => this.resetPassword(entity.userId) }
+              {key: 'resetPassword', name: '重置密码', onClick: () => this.resetPassword(entity.userId)}
             ]}
           />
         ]
@@ -87,15 +87,16 @@ class CustomerList extends React.Component<any, CustomerListState> {
   public constructor(props: any, context: any) {
     super(props, context);
 
-    this.state = { visible: false };
+    this.state = {visible: false};
   }
 
   /**
    * 开启添加用户窗口
    * @param {boolean} visible 可见性
+   * @param {UserListItem} initForm 表单参数
    */
-  setDrawerVisible(visible: boolean) {
-    this.setState({ visible: visible });
+  setDrawerVisible(visible: boolean, initForm?: UserListItem) {
+    this.setState({visible, initForm});
   }
 
   /**
@@ -105,19 +106,19 @@ class CustomerList extends React.Component<any, CustomerListState> {
   onFinish(user: UserListItem) {
 
     if (user.id) {
-      updateUserInfo(user).then(res => {
-        message.success('更新成功!');
+      updateUserInfo(user).then(() => {
         this.actionRef?.reload();
         this.setDrawerVisible(false);
+        return message.success('更新成功!');
       })
     }
     // 新增
     else {
-      addUserInfo(user).then(res => {
-        message.success('添加成功!');
+      addUserInfo(user).then(() => {
         // 意思：告诉编译器，this.actionRef 一定存在，不会为 null 或者 undefined，也就是表取反
         this.actionRef!.reload();
         this.setDrawerVisible(false);
+        return message.success('添加成功!');
       });
     }
 
@@ -128,7 +129,7 @@ class CustomerList extends React.Component<any, CustomerListState> {
    * @param {string} userId 用户ID
    */
   openAccount(userId: string) {
-    openAccount(userId);
+    openAccount(userId).then(() => message.success('开启成功.'));
     // 意思：当且当 action && action.reload() === true 时，执行 action.reload()，否则返回 undefined
     this.actionRef?.reload();
   }
@@ -138,7 +139,7 @@ class CustomerList extends React.Component<any, CustomerListState> {
    * @param {string} userId 用户ID
    */
   closeAccount(userId: string) {
-    closeAccount(userId);
+    closeAccount(userId).then(() => message.success('关闭成功.'));
     this.actionRef?.reload();
   }
 
@@ -147,12 +148,11 @@ class CustomerList extends React.Component<any, CustomerListState> {
    * @param {string} userId 用户ID
    */
   resetPassword(userId: string) {
-    resetPassword(userId).then(res => message.success('密码重置成功！'));
+    resetPassword(userId).then(() => message.success('密码重置成功！'));
   }
 
   updateUser(user: UserListItem) {
-    this.setDrawerVisible(true)
-    this.setState({ initForm: user })
+    this.setDrawerVisible(true, user)
   }
 
   render() {
@@ -163,9 +163,9 @@ class CustomerList extends React.Component<any, CustomerListState> {
           columns={this.columns}
           actionRef={(actionRef) => this.actionRef = actionRef}
           request={userInfoPage}
-          editable={{ type: 'multiple', }}
+          editable={{type: 'multiple',}}
           rowKey="id"
-          search={{ labelWidth: 'auto', }}
+          search={{labelWidth: 'auto',}}
           form={{
             // 由于配置了 transform，提交的参与与定义的不同这里需要转化一下
             syncToUrl: (values, type) => {
@@ -178,11 +178,11 @@ class CustomerList extends React.Component<any, CustomerListState> {
               return values;
             },
           }}
-          pagination={{ pageSize: 5, }}
+          pagination={{pageSize: 5,}}
           dateFormatter="string"
-          headerTitle="高级表格"
+          headerTitle="用户列表"
           toolBarRender={() => [
-            <Button key="button" icon={<PlusOutlined />} type="primary" onClick={() => this.setDrawerVisible(true)}>
+            <Button key="button" icon={<PlusOutlined/>} type="primary" onClick={() => this.setDrawerVisible(true)}>
               新建
             </Button>
           ]}
@@ -192,7 +192,7 @@ class CustomerList extends React.Component<any, CustomerListState> {
           visible={this.state.visible}
           initForm={this.state.initForm}
           onClose={() => this.setDrawerVisible(false)}
-          onFinish={(values: UserListItem) => this.onFinish(values)} />}
+          onFinish={(values: UserListItem) => this.onFinish(values)}/>}
       </PageContainer>
     );
   }

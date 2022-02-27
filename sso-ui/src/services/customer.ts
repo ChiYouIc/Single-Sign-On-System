@@ -1,5 +1,4 @@
 import requests from "@/utils/RequestUtil";
-import user from "mock/user";
 
 export type UserListItem = {
   id?: number;
@@ -68,7 +67,7 @@ export async function updateUserInfo(data: UserListItem, options?: { [key: strin
 export async function openAccount(userId: string) {
   return requests<API.Result>('/api/sys/user/open', {
     method: 'PUT',
-    params: { userId: userId },
+    params: {userId},
   });
 }
 
@@ -80,7 +79,7 @@ export async function openAccount(userId: string) {
 export async function closeAccount(userId: string) {
   return requests<API.Result>('/api/sys/user/close', {
     method: 'PUT',
-    params: { userId: userId },
+    params: {userId},
   });
 }
 
@@ -92,6 +91,6 @@ export async function closeAccount(userId: string) {
 export async function resetPassword(userId: string) {
   return requests<API.Result>('/api/sys/user/reset', {
     method: 'PUT',
-    params: { userId: userId }
+    params: {userId}
   });
 }

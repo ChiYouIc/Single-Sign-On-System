@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.cy.server.web.sys.mapper.AppMapper">
+    <resultMap id="AppResultMap" type="App">
+        <id property="id" column="id"/>
+        <result property="appCode" column="app_code"/>
+        <result property="appName" column="app_name"/>
+        <result property="sort" column="sort"/>
+        <result property="status" column="status"/>
+        <result property="createdBy" column="create_by"/>
+        <result property="createdTime" column="create_time"/>
+        <result property="updatedBy" column="update_by"/>
+        <result property="updatedTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="AppSql">
+        select id,
+               app_code,
+               app_name,
+               sort,
+               status,
+               create_by,
+               create_time,
+               update_by,
+               update_time
+        from sso_app
+    </sql>
+
+    <select id="selectAppList" resultMap="AppResultMap" parameterType="App">
+        <include refid="AppSql"/>
+        <where>
+            <if test="appCode != null and appCode != ''">app_code like concat('%', #{appCode}, '%')</if>
+            <if test="appName != null and appName != ''">app_name like concat('%', #{appName}, '%')</if>
+            <if test="status != null">status = #{status}</if>
+        </where>
+    </select>
+
+    <insert id="insertApp" parameterType="App" useGeneratedKeys="true" keyColumn="id">
+        insert into sso_app(app_code, app_name, sort, status, create_by, create_time, update_by, update_time)
+        values (#{appCode},
+                #{appName},
+                #{sort},
+                #{status},
+                #{createdBy},
+                sysdate(),
+                #{updatedBy},
+                sysdate());
+    </insert>
+
+    <update id="updateApp" parameterType="App">
+        update sso_app
+        <set>
+            <!-- <if test="appCode != null and appCode != ''">app_code = #{appCode},</if> -->
+            <if test="appName != null and appName != ''">app_name = #{appName},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="status != null ">status = #{status},</if>
+            <if test="createdBy != null and createdBy != ''">create_by = #{createdBy},</if>
+            create_time = sysdate(),
+            <if test="updatedBy != null and updatedBy != ''">update_by = #{updatedBy},</if>
+            update_time = sysdate()
+        </set>
+        where id = #{id};
+    </update>
+
+    <update id="updateAppOpen" parameterType="long">
+        update sso_app
+        set status = 1
+        where id = #{id};
+    </update>
+
+    <update id="updateAppClose" parameterType="long">
+        update sso_app
+        set status = 0
+        where id = #{id};
+    </update>
+
+    <delete id="deleteAppByIds" parameterType="arraylist">
+        delete from sso_app where id in
+        <foreach collection="array" item="id" open="(" separator="," close=")">#{id}</foreach>
+    </delete>
+
+</mapper>

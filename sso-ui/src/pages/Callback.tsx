@@ -1,38 +1,38 @@
-import { Component } from 'react';
 import { getToken } from "@/services/login";
-import { history } from "umi";
 import { getAuthenticationToken, setAuthenticationToken } from "@/utils/Tools";
+import { history, useModel } from "umi";
 
-const redirect = `http://localhost:8500/sso?originUrl=${window.location.href}`;
+const redirect = `http://localhost:8500/sso?app=Sso-Server&originUri=${window.location.pathname}&originUrl=${window.location.href}`;
 
-const callback = async (code: string, origin: string) => {
-  getToken(code).then((res: any) => {
+/**
+ * 使用 code 与后端交换 token
+ *
+ * @param {string} code code码
+ * @param {string} originUri 原始地址
+ */
+const codeCallback = async (code: string, originUri: string) => {
+  const { refresh } = useModel('@@initialState');
+
+  await getToken(code).then((res: any) => {
     setAuthenticationToken(res.data);
-    history.push(origin);
+    refresh();
+    history.push(originUri);
   })
 }
 
-class Callback extends Component<any, any> {
+const Callback: React.FC<{}> = (props: any) => {
 
-  constructor(props: any, context: any) {
-    super(props, context);
-    this.state = {
-      code: props.location.query.code || null,
-      origin: props.location.query.originUrl || "/welcome"
-    };
+  const code = props.location.query.code || null;
+  const originUri = props.location.query.originUri || "/welcome";
+
+  if (code == null && getAuthenticationToken() == null) {
+    window.location.href = redirect;
+  } else {
+    codeCallback(code, originUri);
   }
-
-
-  render() {
-    // 如果 code 和 token 都为 null 则直接跳转
-    if (this.state.code == null && getAuthenticationToken() == null) {
-      window.location.href = redirect;
-    } else {
-      callback(this.state.code, this.state.origin);
-    }
-
-    return null;
-  }
+  return null;
 }
 
 export default Callback;
+
+

@@ -4,9 +4,11 @@ import cn.cy.mybatis.web.controller.BaseController;
 import cn.cy.mybatis.web.page.TableDataInfo;
 import cn.cy.server.web.sys.entity.User;
 import cn.cy.server.web.sys.service.IUserService;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -48,7 +50,7 @@ public class UserController extends BaseController {
      * 开户
      */
     @PutMapping("/open")
-    public int openAccount(String userId) {
+    public int openAccount(@Validated @NotNull(message = "参数不能为空") String userId) {
         return userService.openAccount(userId);
     }
 
@@ -56,7 +58,7 @@ public class UserController extends BaseController {
      * 关闭账户
      */
     @PutMapping("/close")
-    public int closeAccount(String userId) {
+    public int closeAccount(@Validated @NotNull(message = "参数不能为空") String userId) {
         return userService.closeAccount(userId);
     }
 
@@ -64,7 +66,7 @@ public class UserController extends BaseController {
      * 重置密码
      */
     @PutMapping("/reset")
-    public int resetPassword(String userId) {
+    public int resetPassword(@Validated @NotNull(message = "参数不能为空") String userId) {
         return userService.resetPassword(userId);
     }
 }

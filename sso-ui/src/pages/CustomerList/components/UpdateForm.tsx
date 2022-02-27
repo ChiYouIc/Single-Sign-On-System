@@ -2,16 +2,7 @@ import { UserListItem } from "@/services/customer";
 import { Button, Drawer, Form, Input, Select } from "antd";
 import { FormInstance } from "antd/es/form/hooks/useForm";
 import React, { RefObject } from "react";
-
-const tailLayout = {
-  wrapperCol: { offset: 8, span: 16 },
-  labelCol: { offset: 8, span: 8 }
-};
-
-const layout = {
-  labelCol: { span: 2 },
-  wrapperCol: { span: 16 },
-};
+import {layout, tailLayout} from '@/../config/defaultSettings'
 
 export type CustomerUpdateFormProps = {
   visible: boolean;
@@ -23,16 +14,6 @@ export type CustomerUpdateFormProps = {
 class UpdateForm extends React.Component<CustomerUpdateFormProps, UserListItem> {
 
   public formRef: RefObject<FormInstance> = React.createRef<FormInstance>()
-
-  constructor(props: CustomerUpdateFormProps, context: any) {
-    super(props, context);
-  }
-
-  componentDidUpdate() {
-    if (!this.props.visible) {
-      this.formRef.current!.resetFields()
-    }
-  }
 
   resetForm() {
     this.formRef.current!.resetFields()

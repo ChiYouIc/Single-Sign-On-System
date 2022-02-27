@@ -12,10 +12,20 @@ const Settings: LayoutSettings & {
   fixedHeader: false,
   fixSiderbar: true,
   colorWeak: false,
-  title: 'Ant Design Pro',
+  title: 'Sso Control',
   pwa: false,
   logo: 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg',
   iconfontUrl: '',
 };
 
 export default Settings;
+
+export const tailLayout = {
+  wrapperCol: {offset: 8, span: 16},
+  labelCol: {offset: 8, span: 8}
+};
+
+export const layout = {
+  labelCol: {span: 2},
+  wrapperCol: {span: 16},
+};
