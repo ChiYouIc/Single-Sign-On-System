@@ -37,7 +37,7 @@ public class AppController extends BaseController {
      * 添加应用
      */
     @PostMapping("/add")
-    public int add(@RequestBody App app) {
+    public int add(@RequestBody App app) throws Exception {
         return appService.insertApp(app);
     }
 
@@ -45,7 +45,7 @@ public class AppController extends BaseController {
      * 更新应用
      */
     @PutMapping("/update")
-    public int update(@RequestBody App app) {
+    public int update(@RequestBody App app) throws Exception {
         return appService.updateApp(app);
     }
 
@@ -54,7 +54,7 @@ public class AppController extends BaseController {
      */
     @PutMapping("/open")
     public int openApp(@Validated @NotNull(message = "参数不能为空") Long id) {
-        return appService.updateAppOpen(id);
+        return appService.openApp(id);
     }
 
     /**
@@ -62,7 +62,7 @@ public class AppController extends BaseController {
      */
     @PutMapping("/close")
     public int closeApp(@Validated @NotNull(message = "参数不能为空") Long id) {
-        return appService.updateAppClose(id);
+        return appService.closeApp(id);
     }
 
 }

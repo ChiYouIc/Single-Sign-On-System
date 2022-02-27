@@ -12,7 +12,7 @@ import java.util.Arrays;
  * @Date: 2021/1/10 17:01
  * @Description: cookie 工具
  */
-public class CookieUtil {
+public class CookieUtils {
 
     public static String getCookieValue(String cookieName) {
         Cookie[] cookies = ServletUtils.getRequest().getCookies();

@@ -19,20 +19,30 @@ public interface IAppService {
     public List<App> selectAppList(App app);
 
     /**
+     * 查询应用
+     *
+     * @param id
+     * @return
+     */
+    public App selectAppById(Long id);
+
+    /**
      * 新增应用
      *
      * @param app 应用
      * @return 结果
+     * @throws Exception
      */
-    public int insertApp(App app);
+    public int insertApp(App app) throws Exception;
 
     /**
      * 更新应用
      *
      * @param app 应用
      * @return 结果
+     * @throws Exception
      */
-    public int updateApp(App app);
+    public int updateApp(App app) throws Exception;
 
     /**
      * 根据 id 删除应用
@@ -48,7 +58,7 @@ public interface IAppService {
      * @param id 主键ID
      * @return 结果
      */
-    public int updateAppOpen(Long id);
+    public int openApp(Long id);
 
     /**
      * 根据主键ID更新应用状态为失效
@@ -56,5 +66,5 @@ public interface IAppService {
      * @param id 主键ID
      * @return 结果
      */
-    public int updateAppClose(Long id);
+    public int closeApp(Long id);
 }

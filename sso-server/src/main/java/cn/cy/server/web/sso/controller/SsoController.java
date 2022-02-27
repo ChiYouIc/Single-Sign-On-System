@@ -3,7 +3,7 @@ package cn.cy.server.web.sso.controller;
 import cn.cy.mybatis.web.controller.BaseController;
 import cn.cy.server.cache.IUserCacheService;
 import cn.cy.server.core.JwtHelper;
-import cn.cy.server.util.CookieUtil;
+import cn.cy.server.util.CookieUtils;
 import cn.cy.server.web.sso.entity.LoginParam;
 import cn.cy.server.web.sso.service.ISsoService;
 import cn.hutool.core.util.StrUtil;
@@ -95,7 +95,7 @@ public class SsoController extends BaseController {
         // 校验密码
         if (ssoService.authentication(param) && StrUtil.isNotEmpty(originUrl)) {
             String code = ssoService.generateToken(param, session);
-            CookieUtil.addCookieValue(response, "auth-key", session.getId());
+            CookieUtils.addCookieValue(response, "auth-key", session.getId());
             String[] split = originUrl.split("\\?");
             return "redirect:" + split[0] + "?code=" + code;
         }

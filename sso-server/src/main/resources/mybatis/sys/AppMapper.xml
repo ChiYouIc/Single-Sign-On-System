@@ -35,6 +35,11 @@
         </where>
     </select>
 
+    <select id="selectAppById" resultMap="AppResultMap" parameterType="long">
+        <include refid="AppSql"/>
+        where id = #{id}
+    </select>
+
     <insert id="insertApp" parameterType="App" useGeneratedKeys="true" keyColumn="id">
         insert into sso_app(app_code, app_name, sort, status, create_by, create_time, update_by, update_time)
         values (#{appCode},
@@ -50,7 +55,7 @@
     <update id="updateApp" parameterType="App">
         update sso_app
         <set>
-            <!-- <if test="appCode != null and appCode != ''">app_code = #{appCode},</if> -->
+            <if test="appCode != null and appCode != ''">app_code = #{appCode},</if>
             <if test="appName != null and appName != ''">app_name = #{appName},</if>
             <if test="sort != null">sort = #{sort},</if>
             <if test="status != null ">status = #{status},</if>
@@ -62,15 +67,9 @@
         where id = #{id};
     </update>
 
-    <update id="updateAppOpen" parameterType="long">
+    <update id="updateStatusById" parameterType="map">
         update sso_app
-        set status = 1
-        where id = #{id};
-    </update>
-
-    <update id="updateAppClose" parameterType="long">
-        update sso_app
-        set status = 0
+        set status = #{status}
         where id = #{id};
     </update>
 

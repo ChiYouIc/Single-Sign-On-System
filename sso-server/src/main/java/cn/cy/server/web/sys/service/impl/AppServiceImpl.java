@@ -1,11 +1,14 @@
 package cn.cy.server.web.sys.service.impl;
 
+import cn.cy.server.util.EncryptUtils;
 import cn.cy.server.web.sys.entity.App;
 import cn.cy.server.web.sys.mapper.AppMapper;
 import cn.cy.server.web.sys.service.IAppService;
+import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -25,24 +28,38 @@ public class AppServiceImpl implements IAppService {
     }
 
     @Override
-    public int insertApp(App app) {
+    public App selectAppById(Long id) {
+        return appMapper.selectAppById(id);
+    }
+
+    @Override
+    public int insertApp(App app) throws Exception {
+        String appName = app.getAppName();
+        byte[] desEncode = EncryptUtils.desEncode(appName.getBytes(StandardCharsets.UTF_8));
+        app.setAppCode(Base64.encode(desEncode));
         // 创建应用码
         return appMapper.insertApp(app);
     }
 
     @Override
-    public int updateApp(App app) {
+    public int updateApp(App app) throws Exception {
+        App oldApp = this.selectAppById(app.getId());
+        String appName = oldApp.getAppName();
+        if (app.getAppName() != null && !app.getAppName().equals(appName)) {
+            byte[] desEncode = EncryptUtils.desEncode(appName.getBytes(StandardCharsets.UTF_8));
+            app.setAppCode(Base64.encode(desEncode));
+        }
         return appMapper.updateApp(app);
     }
 
     @Override
-    public int updateAppOpen(Long id) {
-        return appMapper.updateAppOpen(id);
+    public int openApp(Long id) {
+        return appMapper.updateStatusById(id, 1);
     }
 
     @Override
-    public int updateAppClose(Long id) {
-        return appMapper.updateAppClose(id);
+    public int closeApp(Long id) {
+        return appMapper.updateStatusById(id, 0);
     }
 
     @Override

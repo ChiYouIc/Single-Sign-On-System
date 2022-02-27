@@ -1,7 +1,7 @@
 import React, {RefObject} from "react";
 import {FormInstance} from "antd/es/form/hooks/useForm";
 import {layout, tailLayout} from '@/../config/defaultSettings'
-import {Button, Drawer, Form, Input, Select} from "antd";
+import {Button, Drawer, Form, Input, InputNumber, Select} from "antd";
 import {AppListItem} from "@/services/app/types";
 
 export type AppUpdateFormProps = {
@@ -61,7 +61,7 @@ class UpdateForm extends React.Component<AppUpdateFormProps, any> {
             name='sort'
             rules={[{type: 'number', required: true, message: '请输入应用排序.'}]}
           >
-            <Input/>
+            <InputNumber/>
           </Form.Item>
           <Form.Item
             label='状态'

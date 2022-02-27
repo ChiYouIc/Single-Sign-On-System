@@ -2,6 +2,7 @@ package cn.cy.server.web.sys.mapper;
 
 import cn.cy.server.web.sys.entity.App;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -23,6 +24,14 @@ public interface AppMapper {
     public List<App> selectAppList(App app);
 
     /**
+     * 根据主键ID查询应用
+     *
+     * @param id 主键ID
+     * @return 应用
+     */
+    public App selectAppById(Long id);
+
+    /**
      * 新增应用
      *
      * @param app 应用
@@ -39,20 +48,13 @@ public interface AppMapper {
     public int updateApp(App app);
 
     /**
-     * 根据主键ID更新应用状态为已认证
+     * 根据ID更新应用状态
      *
-     * @param id 主键ID
-     * @return 结果
+     * @param id     主键ID
+     * @param status 状态
+     * @return
      */
-    public int updateAppOpen(Long id);
-
-    /**
-     * 根据主键ID更新应用状态为失效
-     *
-     * @param id 主键ID
-     * @return 结果
-     */
-    public int updateAppClose(Long id);
+    public int updateStatusById(@Param("id") Long id, @Param("status") Integer status);
 
     /**
      * 根据 id 删除应用
