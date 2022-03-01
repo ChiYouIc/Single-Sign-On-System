@@ -3,13 +3,16 @@ import {PlusOutlined} from '@ant-design/icons';
 import {Button, message} from 'antd';
 import type {ActionType, ProColumns} from '@ant-design/pro-table';
 import ProTable, {TableDropdown} from '@ant-design/pro-table';
-import {addUserInfo, closeAccount, openAccount, resetPassword, updateUserInfo, userInfoPage, UserListItem} from "@/services/customer";
+import {addUserInfo, closeAccount, openAccount, resetPassword, showPassword, updateUserInfo, userInfoPage, UserListItem} from "@/services/customer";
 import UpdateForm from "./components/UpdateForm";
 import {PageContainer} from "@ant-design/pro-layout";
+import ShowPassword from "@/pages/CustomerList/components/ShowPassword";
 
 export type CustomerListState = {
   visible: boolean;
+  pwdVisible: boolean;
   initForm?: UserListItem;
+  pwdInitForm?: { [key: string]: string }
 }
 
 class CustomerList extends React.Component<any, CustomerListState> {
@@ -72,7 +75,8 @@ class CustomerList extends React.Component<any, CustomerListState> {
           <TableDropdown
             key="actionGroup"
             menus={[
-              {key: 'resetPassword', name: '重置密码', onClick: () => this.resetPassword(entity.userId)}
+              {key: 'resetPassword', name: '重置密码', onClick: () => this.resetPassword(entity.userId)},
+              {key: 'showPassword', name: '查看密码', onClick: () => this.showPassword(entity.userId)},
             ]}
           />
         ]
@@ -87,7 +91,7 @@ class CustomerList extends React.Component<any, CustomerListState> {
   public constructor(props: any, context: any) {
     super(props, context);
 
-    this.state = {visible: false};
+    this.state = {visible: false, pwdVisible: false};
   }
 
   /**
@@ -151,6 +155,24 @@ class CustomerList extends React.Component<any, CustomerListState> {
     resetPassword(userId).then(() => message.success('密码重置成功！'));
   }
 
+  /**
+   * 查看密码
+   * @param userId 用户ID
+   */
+  showPassword(userId: string) {
+    showPassword(userId).then(res => {
+      this.setState({pwdVisible: true, pwdInitForm: {password: String(res.data)}})
+    })
+  }
+
+  handleOk() {
+    this.setState({pwdVisible: false, pwdInitForm: {password: ''}})
+  };
+
+  handleCancel() {
+    this.setState({pwdVisible: false, pwdInitForm: {password: ''}})
+  };
+
   updateUser(user: UserListItem) {
     this.setDrawerVisible(true, user)
   }
@@ -193,6 +215,12 @@ class CustomerList extends React.Component<any, CustomerListState> {
           initForm={this.state.initForm}
           onClose={() => this.setDrawerVisible(false)}
           onFinish={(values: UserListItem) => this.onFinish(values)}/>}
+        {this.state.pwdVisible && <ShowPassword
+          visible={this.state.pwdVisible}
+          initForm={this.state.pwdInitForm}
+          handleOk={() => this.handleOk()}
+          handleCancel={() => this.handleCancel()}
+        />}
       </PageContainer>
     );
   }

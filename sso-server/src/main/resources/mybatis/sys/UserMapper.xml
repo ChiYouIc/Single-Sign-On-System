@@ -29,6 +29,9 @@
             <if test="status != null">and status = #{status}</if>
         </where>
     </select>
+    <select id="selectUserPasswordByUserId" resultType="java.lang.String">
+        select password from sso_user where user_id = #{userId};
+    </select>
 
     <insert id="insertUser" parameterType="User">
         insert into sso_user(user_id, user_name, phone, email, password, status, create_by, create_time)

@@ -1,18 +1,28 @@
 package cn.cy.server.web.sso.service.impl;
 
-import cn.cy.server.web.sso.entity.LoginParam;
-import cn.cy.server.web.sso.mapper.UserInfoMapper;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.cy.server.cache.IUserCacheService;
 import cn.cy.server.core.JwtHelper;
+import cn.cy.server.util.EncryptUtils;
+import cn.cy.server.web.sso.entity.LoginParam;
 import cn.cy.server.web.sso.entity.UserInfo;
+import cn.cy.server.web.sso.mapper.UserInfoMapper;
 import cn.cy.server.web.sso.service.ISsoService;
+import cn.cy.web.exception.ApiException;
+import cn.cy.web.response.ErrorCodeEnum;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
+import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import io.jsonwebtoken.impl.DefaultClaims;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.servlet.http.HttpSession;
+import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
 /**
@@ -36,8 +46,14 @@ public class SsoServiceImpl implements ISsoService {
 
     @Override
     public boolean authentication(LoginParam param) {
-        UserInfo info = userInfoMapper.selectUserInfo(param.getUsername());
-        return ObjectUtil.isNotEmpty(info) && StrUtil.equals(param.getPassword(), info.getPassword());
+        try {
+            UserInfo info = userInfoMapper.selectUserInfo(param.getUsername());
+            byte[] desEncode = EncryptUtils.desEncode(param.getPassword().getBytes(StandardCharsets.UTF_8));
+            return ObjectUtil.isNotEmpty(info) && StrUtil.equals(Base64.encode(desEncode), info.getPassword());
+        } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     @Override

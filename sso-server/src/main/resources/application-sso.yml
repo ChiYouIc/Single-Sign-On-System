@@ -2,6 +2,7 @@ sso-core:
   type: server
 
 sso-server:
+  origin-password: "123456789"
   exclude:
     - /
     - /login

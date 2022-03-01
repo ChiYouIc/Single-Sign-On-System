@@ -1,14 +1,29 @@
 {
   "properties": [
     {
-      "name": "sso",
+      "name": "sso-server",
       "type": "java.lang.Object",
-      "description": "Description for sso."
+      "description": "sso server 配置."
     },
     {
-      "name": "sso.exclude",
+      "name": "sso-server.base-path",
       "type": "java.lang.String",
-      "description": "Description for sso.exclude."
+      "description": "基础路径."
+    },
+    {
+      "name": "sso-server.resource-path",
+      "type": "java.lang.String",
+      "description": "静态资源路径."
+    },
+    {
+      "name": "sso-server.exclude",
+      "type": "java.util.List",
+      "description": "无需拦截认证的url资源."
+    },
+    {
+      "name": "sso-server.origin-password",
+      "type": "java.lang.String",
+      "description": "初始化密码."
     }
   ]
 }

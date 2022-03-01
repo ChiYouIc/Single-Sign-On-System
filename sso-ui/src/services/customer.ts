@@ -94,3 +94,14 @@ export async function resetPassword(userId: string) {
     params: {userId}
   });
 }
+
+/**
+ * 查看密码
+ * @param userId 用户ID
+ */
+export async function showPassword(userId: string) {
+  return requests<API.Result>('/api/sys/user/show', {
+    method: 'get',
+    params: {userId}
+  })
+}

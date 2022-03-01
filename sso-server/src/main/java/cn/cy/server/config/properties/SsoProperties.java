@@ -23,4 +23,6 @@ public class SsoProperties {
     private String resourcePath = "/static/**";
 
     private List<String> exclude;
+
+    private String originPassword;
 }

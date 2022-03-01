@@ -69,4 +69,12 @@ public class UserController extends BaseController {
     public int resetPassword(@Validated @NotNull(message = "参数不能为空") String userId) {
         return userService.resetPassword(userId);
     }
+
+    /**
+     * 查看密码
+     */
+    @GetMapping("/show")
+    public String showPassword(@Validated @NotNull(message = "参数不能为空") String userId){
+        return userService.selectUserPasswordByUserId(userId);
+    }
 }

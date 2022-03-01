@@ -26,6 +26,14 @@ public interface UserMapper {
     public List<User> selectUserList(User infoParam);
 
     /**
+     * 根据用户ID查询用户密码
+     *
+     * @param userId 用户ID
+     * @return 密码
+     */
+    public String selectUserPasswordByUserId(String userId);
+
+    /**
      * 新增用户信息
      *
      * @param info 用户信息

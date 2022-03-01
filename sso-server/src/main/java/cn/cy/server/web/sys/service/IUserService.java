@@ -19,6 +19,14 @@ public interface IUserService {
     public List<User> selectUserList(User info);
 
     /**
+     * 根据用户ID查询用户密码
+     *
+     * @param userId 用户ID
+     * @return 密码
+     */
+    public String selectUserPasswordByUserId(String userId);
+
+    /**
      * 新增用户信息
      *
      * @param info 用户信息
@@ -28,6 +36,7 @@ public interface IUserService {
 
     /**
      * 更新用户信息
+     *
      * @param info 用户信息
      * @return 结果
      */
@@ -35,6 +44,7 @@ public interface IUserService {
 
     /**
      * 开启账户
+     *
      * @param userId 用户ID
      * @return 结果
      */
@@ -42,6 +52,7 @@ public interface IUserService {
 
     /**
      * 关闭账户
+     *
      * @param userId 用户ID
      * @return 结果
      */
@@ -49,6 +60,7 @@ public interface IUserService {
 
     /**
      * 重置密码
+     *
      * @param userId 用户ID
      * @return 结果
      */
