@@ -8,7 +8,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -24,14 +23,8 @@ import java.util.List;
  */
 @Slf4j
 @Configuration
-@ComponentScan(basePackages = AutoConfig.BASE_PATH)
-@EnableConfigurationProperties(value = {
-        SsoProperties.class,
-        JwtProperties.class
-})
+@EnableConfigurationProperties(value = {SsoProperties.class, JwtProperties.class})
 public class AutoConfig implements WebMvcConfigurer {
-
-    protected static final String BASE_PATH = "cn.cy";
 
     @Resource
     private SsoProperties ssoProperties;

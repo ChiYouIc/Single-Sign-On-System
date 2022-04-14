@@ -1,6 +1,7 @@
 import { getToken } from "@/services/login";
 import { getAuthenticationToken, setAuthenticationToken } from "@/utils/Tools";
 import { history, useModel } from "umi";
+import React from "react";
 
 const redirect = `http://localhost:8500/sso?app=Sso-Server&originUri=${window.location.pathname}&originUrl=${window.location.href}`;
 
@@ -28,7 +29,7 @@ const Callback: React.FC<{}> = (props: any) => {
   if (code == null && getAuthenticationToken() == null) {
     window.location.href = redirect;
   } else {
-    codeCallback(code, originUri);
+    codeCallback(code, originUri)
   }
   return null;
 }

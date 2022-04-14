@@ -32,7 +32,7 @@ public class TokenInvalidInterceptor implements HandlerInterceptor, Ordered {
      * <p>如果用户令牌有效，绑定一个用户信息的当前线程变量，前往一下个执行链（返回 true）
      */
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String token = request.getHeader("Authentication-Token");
 
         // 验证 token 有效性
