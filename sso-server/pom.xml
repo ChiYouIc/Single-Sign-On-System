@@ -45,6 +45,11 @@
         </dependency>
 
         <dependency>
+            <groupId>cn.cy</groupId>
+            <artifactId>personal-start-log</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>

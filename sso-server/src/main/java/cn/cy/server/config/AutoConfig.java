@@ -1,9 +1,13 @@
 package cn.cy.server.config;
 
+import cn.cy.log.bo.Operator;
+import cn.cy.log.service.IOperatorGetService;
 import cn.cy.server.config.properties.JwtProperties;
 import cn.cy.server.config.properties.SsoProperties;
 import cn.cy.server.core.JwtHelper;
 import cn.cy.server.core.interceptor.TokenInvalidInterceptor;
+import cn.cy.sso.model.SsoUser;
+import cn.cy.sso.utils.SsoUtil;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -56,5 +60,13 @@ public class AutoConfig implements WebMvcConfigurer {
     @Bean
     public JwtHelper jwtHelper() {
         return new JwtHelper(jwtProperties, SignatureAlgorithm.HS256);
+    }
+
+    @Bean
+    public IOperatorGetService operatorGetService() {
+        return () -> {
+            SsoUser info = SsoUtil.getInfo();
+            return new Operator(info.getId(), info.getUsername());
+        };
     }
 }
