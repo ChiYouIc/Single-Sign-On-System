@@ -1,7 +1,7 @@
 package cn.cy.server.web.sys.controller;
 
 import cn.cy.log.Log;
-import cn.cy.log.OperationType;
+import cn.cy.log.bo.OperationType;
 import cn.cy.mybatis.web.controller.BaseController;
 import cn.cy.mybatis.web.page.TableDataInfo;
 import cn.cy.server.web.sys.entity.App;
