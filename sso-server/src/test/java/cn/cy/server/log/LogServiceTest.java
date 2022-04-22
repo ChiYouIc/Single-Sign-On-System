@@ -1,6 +1,6 @@
 package cn.cy.server.log;
 
-import cn.cy.log.OperationType;
+import cn.cy.log.bo.OperationType;
 import cn.cy.log.bo.*;
 import cn.cy.server.web.log.service.IOperationLogService;
 import cn.hutool.json.JSONUtil;
