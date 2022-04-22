@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.cy.server.web.log.mapper.AuditLogMapper">
+
+    <resultMap id="AuditLogResultMap" type="cn.cy.log.bo.AuditLog">
+        <id property="id" column="id"/>
+        <result property="traceId" column="trace_id"/>
+        <result property="operationId" column="operation_id"/>
+        <result property="auditContent" column="audit_content"/>
+        <result property="level" column="level"/>
+        <result property="operationTime" column="operation_time"/>
+    </resultMap>
+
+    <select id="selectAuditLogListByOperationId" parameterType="java.lang.Long" resultMap="AuditLogResultMap">
+        select id, operation_id, trace_id, audit_content, level, operation_time
+        from log_audit
+        where operation_id = #{operationId}
+    </select>
+
+    <insert id="insertAuditLogList" parameterType="java.util.List">
+        insert into log_audit(trace_id, operation_id, audit_content, level, operation_time) values
+        <foreach collection="list" item="l" separator=",">
+            (
+            #{l.traceId},
+            #{l.operationId},
+            #{l.auditContent},
+            #{l.level},
+            #{l.operationTime}
+            )
+        </foreach>
+    </insert>
+
+</mapper>

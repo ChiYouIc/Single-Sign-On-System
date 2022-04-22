@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.cy.server.web.log.mapper.OperationLogMapper">
+
+    <resultMap id="OperationLogResultMap" type="cn.cy.log.bo.OperationLog">
+        <id property="id" column="id"/>
+        <result property="traceId" column="traceId"/>
+        <result property="method" column="method"/>
+        <result property="params" column="params"/>
+        <result property="result" column="result"/>
+        <result property="description" column="description"/>
+        <result property="operation" column="operation"/>
+        <result property="operationStatus" column="operation_status"/>
+        <result property="throwable" column="throwable"/>
+        <result property="operationTime" column="operation_time"/>
+        <association property="operator" javaType="cn.cy.log.bo.Operator">
+            <result property="id" column="operator_id"/>
+            <result property="operatorName" column="operator_name"/>
+        </association>
+    </resultMap>
+
+    <select id="selectOperationLogList" resultType="cn.cy.log.bo.OperationLog" resultMap="OperationLogResultMap">
+        select id, traceId, operator_id, operator_name, method, params, result, description, operation, operation_status, throwable, operation_time from log_operation
+        <where>
+            <if test="traceId != null and traceId != ''">trace_id like concat(#{traceId}, '%')</if>
+            <if test="operation != null">operation = #{operation}</if>
+            <if test="operationStatus != null">operation_status = #{operationStatus}</if>
+            <if test="operationTime != null">operation_time = #{operationTime}</if>
+        </where>
+    </select>
+
+    <insert id="insertOperationLog" parameterType="map" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        insert into log_operation(traceId, operator_id, operator_name, method, params, result, description, operation, operation_status, throwable, operation_time)
+        values (#{traceId},
+                #{operator.id},
+                #{operator.operatorName},
+                #{method},
+                #{params},
+                #{result},
+                #{description},
+                #{operation},
+                #{operationStatus},
+                #{throwable},
+                #{operationTime});
+    </insert>
+
+
+</mapper>

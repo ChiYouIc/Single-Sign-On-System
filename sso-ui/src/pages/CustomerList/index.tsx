@@ -1,14 +1,14 @@
-import React, {RefObject} from "react";
-import {PlusOutlined} from '@ant-design/icons';
-import {Button, message} from 'antd';
-import type {ActionType, ProColumns} from '@ant-design/pro-table';
-import ProTable, {TableDropdown} from '@ant-design/pro-table';
-import {addUserInfo, closeAccount, openAccount, resetPassword, showPassword, updateUserInfo, userInfoPage, UserListItem} from "@/services/customer";
-import UpdateForm from "./components/UpdateForm";
-import {PageContainer} from "@ant-design/pro-layout";
-import ShowPassword from "@/pages/CustomerList/components/ShowPassword";
+import React, { RefObject } from 'react';
+import { PlusOutlined } from '@ant-design/icons';
+import { Button, message } from 'antd';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
+import ProTable, { TableDropdown } from '@ant-design/pro-table';
+import { addUserInfo, closeAccount, openAccount, resetPassword, showPassword, updateUserInfo, userInfoPage, UserListItem } from '@/services/customer';
+import UpdateForm from './components/UpdateForm';
+import { PageContainer } from '@ant-design/pro-layout';
+import ShowPassword from '@/pages/CustomerList/components/ShowPassword';
 
-export type CustomerListState = {
+type CustomerListState = {
   visible: boolean;
   pwdVisible: boolean;
   initForm?: UserListItem;
@@ -54,7 +54,7 @@ class CustomerList extends React.Component<any, CustomerListState> {
           text: '已注销',
           status: 'Default',
         },
-      }
+      },
     },
     {
       title: '操作',
@@ -64,24 +64,24 @@ class CustomerList extends React.Component<any, CustomerListState> {
       render: (_, entity) => {
         let node;
         if (entity.status === 1) {
-          node = <a key='close' onClick={() => this.closeAccount(entity.userId)}>注销</a>
+          node = <a key='close' onClick={() => this.closeAccount(entity.userId)}>注销</a>;
         } else if (entity.status === 0) {
-          node = <a key='open' onClick={() => this.openAccount(entity.userId)}>开户</a>
+          node = <a key='open' onClick={() => this.openAccount(entity.userId)}>开户</a>;
         }
 
         return [
           node,
           <a key='update' onClick={() => this.updateUser(entity)}>编辑</a>,
           <TableDropdown
-            key="actionGroup"
+            key='actionGroup'
             menus={[
-              {key: 'resetPassword', name: '重置密码', onClick: () => this.resetPassword(entity.userId)},
-              {key: 'showPassword', name: '查看密码', onClick: () => this.showPassword(entity.userId)},
+              { key: 'resetPassword', name: '重置密码', onClick: () => this.resetPassword(entity.userId) },
+              { key: 'showPassword', name: '查看密码', onClick: () => this.showPassword(entity.userId) },
             ]}
-          />
-        ]
-      }
-    }
+          />,
+        ];
+      },
+    },
   ];
 
   public actionRef: ActionType | undefined;
@@ -91,7 +91,7 @@ class CustomerList extends React.Component<any, CustomerListState> {
   public constructor(props: any, context: any) {
     super(props, context);
 
-    this.state = {visible: false, pwdVisible: false};
+    this.state = { visible: false, pwdVisible: false };
   }
 
   /**
@@ -100,7 +100,7 @@ class CustomerList extends React.Component<any, CustomerListState> {
    * @param {UserListItem} initForm 表单参数
    */
   setDrawerVisible(visible: boolean, initForm?: UserListItem) {
-    this.setState({visible, initForm});
+    this.setState({ visible, initForm });
   }
 
   /**
@@ -114,7 +114,7 @@ class CustomerList extends React.Component<any, CustomerListState> {
         this.actionRef?.reload();
         this.setDrawerVisible(false);
         return message.success('更新成功!');
-      })
+      });
     }
     // 新增
     else {
@@ -161,20 +161,20 @@ class CustomerList extends React.Component<any, CustomerListState> {
    */
   showPassword(userId: string) {
     showPassword(userId).then(res => {
-      this.setState({pwdVisible: true, pwdInitForm: {password: String(res.data)}})
-    })
+      this.setState({ pwdVisible: true, pwdInitForm: { password: String(res.data) } });
+    });
   }
 
   handleOk() {
-    this.setState({pwdVisible: false, pwdInitForm: {password: ''}})
+    this.setState({ pwdVisible: false, pwdInitForm: { password: '' } });
   };
 
   handleCancel() {
-    this.setState({pwdVisible: false, pwdInitForm: {password: ''}})
+    this.setState({ pwdVisible: false, pwdInitForm: { password: '' } });
   };
 
   updateUser(user: UserListItem) {
-    this.setDrawerVisible(true, user)
+    this.setDrawerVisible(true, user);
   }
 
   render() {
@@ -183,11 +183,11 @@ class CustomerList extends React.Component<any, CustomerListState> {
       <PageContainer>
         <ProTable<UserListItem, API.PageParams>
           columns={this.columns}
-          actionRef={(actionRef) => this.actionRef = actionRef}
+          actionRef={(actionRef: any) => this.actionRef = actionRef}
           request={userInfoPage}
-          editable={{type: 'multiple',}}
-          rowKey="id"
-          search={{labelWidth: 'auto',}}
+          editable={{ type: 'multiple' }}
+          rowKey='id'
+          search={{ labelWidth: 'auto' }}
           form={{
             // 由于配置了 transform，提交的参与与定义的不同这里需要转化一下
             syncToUrl: (values, type) => {
@@ -200,13 +200,13 @@ class CustomerList extends React.Component<any, CustomerListState> {
               return values;
             },
           }}
-          pagination={{pageSize: 5,}}
-          dateFormatter="string"
-          headerTitle="用户列表"
+          pagination={{ pageSize: 5 }}
+          dateFormatter='string'
+          headerTitle='用户列表'
           toolBarRender={() => [
-            <Button key="button" icon={<PlusOutlined/>} type="primary" onClick={() => this.setDrawerVisible(true)}>
+            <Button key='button' icon={<PlusOutlined />} type='primary' onClick={() => this.setDrawerVisible(true)}>
               新建
-            </Button>
+            </Button>,
           ]}
         />
         {this.state.visible && <UpdateForm
@@ -214,7 +214,7 @@ class CustomerList extends React.Component<any, CustomerListState> {
           visible={this.state.visible}
           initForm={this.state.initForm}
           onClose={() => this.setDrawerVisible(false)}
-          onFinish={(values: UserListItem) => this.onFinish(values)}/>}
+          onFinish={(values: UserListItem) => this.onFinish(values)} />}
         {this.state.pwdVisible && <ShowPassword
           visible={this.state.pwdVisible}
           initForm={this.state.pwdInitForm}

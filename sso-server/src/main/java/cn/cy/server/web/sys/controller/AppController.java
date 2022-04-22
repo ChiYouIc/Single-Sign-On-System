@@ -40,7 +40,7 @@ public class AppController extends BaseController {
      * 添加应用
      */
     @PostMapping("/add")
-    @Log(success = "添加应用：#{app}", error = "添加应用失败，应用信息 #{app}", operation = OperationType.INSERT)
+    @Log(success = "添加应用：{#app.toString}", error = "添加应用失败，应用信息 {#app.toString}", operation = OperationType.INSERT)
     public int add(@RequestBody App app) throws Exception {
         return appService.insertApp(app);
     }
@@ -49,7 +49,7 @@ public class AppController extends BaseController {
      * 更新应用
      */
     @PutMapping("/update")
-    @Log(success = "更新应用成功，应用信息：#{app}", error = "更新应用失败，应用信息 #{app}", operation = OperationType.UPDATE)
+    @Log(success = "更新应用成功，应用信息：{#app.toString}", error = "更新应用失败，应用信息 {#app.toString}", operation = OperationType.UPDATE)
     public int update(@RequestBody App app) throws Exception {
         return appService.updateApp(app);
     }
@@ -58,7 +58,7 @@ public class AppController extends BaseController {
      * 开启应用
      */
     @PutMapping("/open")
-    @Log(success = "开启应用成功，应用 id：#{id}", error = "开启应用失败，应用 id：#{id}", operation = OperationType.UPDATE)
+    @Log(success = "开启应用成功，应用 id：{#id}", error = "开启应用失败，应用 id：{#id}", operation = OperationType.UPDATE)
     public int openApp(@Validated @NotNull(message = "参数不能为空") Long id) {
         return appService.openApp(id);
     }
@@ -67,7 +67,7 @@ public class AppController extends BaseController {
      * 关闭应用
      */
     @PutMapping("/close")
-    @Log(success = "关闭应用成功，应用 id：#{id}", error = "关闭应用失败，应用 id：#{id}", operation = OperationType.UPDATE)
+    @Log(success = "关闭应用成功，应用 id：{#id}", error = "关闭应用失败，应用 id：{#id}", operation = OperationType.UPDATE)
     public int closeApp(@Validated @NotNull(message = "参数不能为空") Long id) {
         return appService.closeApp(id);
     }

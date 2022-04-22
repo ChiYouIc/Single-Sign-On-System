@@ -1,0 +1,15 @@
+.time-line-item-content {
+
+}
+
+.time-line-item-content > li {
+  margin-left: 5px;
+}
+
+.time-line-item-content > li > span {
+  display: inline-block;
+}
+
+.time-line-item-content > li > span:first-child {
+  color: #878787;
+}

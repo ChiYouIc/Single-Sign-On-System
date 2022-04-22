@@ -2,7 +2,7 @@
   {
     path: '/codeCallback',
     layout: false,
-    component: './Callback'
+    component: './Callback',
   },
   {
     path: '/welcome',
@@ -20,7 +20,13 @@
     name: '应用列表',
     icon: 'appstore',
     path: '/app',
-    component: './AppList'
+    component: './AppList',
+  },
+  {
+    name: '日志列表',
+    icon: 'fileText',
+    path: '/log',
+    component: './log',
   },
   {
     path: '/',
@@ -28,5 +34,5 @@
   },
   {
     component: './404',
-  }
+  },
 ];

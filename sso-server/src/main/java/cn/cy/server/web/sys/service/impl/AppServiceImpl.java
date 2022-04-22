@@ -1,9 +1,11 @@
 package cn.cy.server.web.sys.service.impl;
 
+import cn.cy.log.LogUtils;
 import cn.cy.server.util.EncryptUtils;
 import cn.cy.server.web.sys.entity.App;
 import cn.cy.server.web.sys.mapper.AppMapper;
 import cn.cy.server.web.sys.service.IAppService;
+import cn.hutool.json.JSONUtil;
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +38,9 @@ public class AppServiceImpl implements IAppService {
     public int insertApp(App app) throws Exception {
         String appName = app.getAppName();
         byte[] desEncode = EncryptUtils.desEncode(appName.getBytes(StandardCharsets.UTF_8));
-        app.setAppCode(Base64.encode(desEncode));
+        String appCode = Base64.encode(desEncode);
+        app.setAppCode(appCode);
+        LogUtils.info("新增应用，应用名称：【{}】，应用 appCode：【{}】", appName, appCode);
         return appMapper.insertApp(app);
     }
 
@@ -44,10 +48,14 @@ public class AppServiceImpl implements IAppService {
     public int updateApp(App app) throws Exception {
         App oldApp = this.selectAppById(app.getId());
         String appName = oldApp.getAppName();
+        LogUtils.info("修改前应用信息：{}", JSONUtil.toJsonStr(oldApp));
         if (app.getAppName() != null && !app.getAppName().equals(appName)) {
             byte[] desEncode = EncryptUtils.desEncode(appName.getBytes(StandardCharsets.UTF_8));
-            app.setAppCode(Base64.encode(desEncode));
+            String appCode = Base64.encode(desEncode);
+            app.setAppCode(appCode);
+            LogUtils.warn("应用 appCode 发生改变，由 【{}】 变为 【{}】", oldApp.getAppCode(), appCode);
         }
+        LogUtils.info("修改后应用信息为：{}", JSONUtil.toJsonStr(app));
         return appMapper.updateApp(app);
     }
 
