@@ -10,7 +10,7 @@
 </head>
 <body>
 <div>
-    <div class="center">
+   <!-- <div class="center">
         <div class="center-left">
             <div class="login-title">
                 <p>登录</p>
@@ -40,6 +40,79 @@
                         <p th:if="*{msg}" th:text="*{msg}" style="color: red;"></p>
                     </li>
                 </ul>
+            </form>
+        </div>
+    </div>-->
+
+    <div class="login-container">
+        <div class="login-container-head">
+            <div class="login-head-logo">
+                <img th:src="@{/static/svg/logo.svg}" width="44" height="44" />
+            </div>
+            <div class="login-head-title">
+                <span>Sso Management System</span>
+            </div>
+        </div>
+        <div class="login-container-form">
+            <!--<div class="login-type-select">
+                <ul>
+                    <li>
+                        <label for="account">
+                            <input
+                                    id="account"
+                                    checked="checked"
+                                    style="display: none"
+                                    name="type"
+                                    type="radio"
+                            /><span>账户密码登录</span></label
+                        >
+                    </li>
+                    <li>
+                        <label for="phone"
+                        ><input
+                                id="phone"
+                                style="display: none"
+                                name="type"
+                                type="radio"
+                        /><span>手机号登录</span></label
+                        >
+                    </li>
+                </ul>
+            </div>-->
+            <form th:action="@{/login}" th:object="${loginParam}" method="post">
+                <div id="account-login">
+                    <div class="form-account">
+                        <img class="input-logo" th:src="@{/static/svg/user.svg}" width="16" height="16" />
+                        <input id="username" type="text" th:field="*{username}" placeholder="用输入用户名" onfocus="inputOnFocus(this)" onblur="inputOnblur(this)"/>
+                    </div>
+                    <div class="form-pwd">
+                        <img class="input-logo" th:src="@{/static/svg/password.svg}" width="16" height="16" />
+                        <input id="password" type="password" th:field="*{password}" placeholder="用输入密码" onfocus="inputOnFocus(this)" onblur="inputOnblur(this)" />
+                    </div>
+                </div>
+
+                <div id="phone-login" hidden="hidden">
+                    <div class="form-account">
+                        <img class="input-logo" th:src="@{/static/svg/phone.svg}" width="16" height="16" />
+                        <input id="phoneNumber" type="text" placeholder="用输入手机" onfocus="inputOnFocus(this)" onblur="inputOnblur(this)"/>
+                    </div>
+                    <div>
+                        <div class="form-code">
+                            <img class="input-logo" th:src="@{/static/svg/password.svg}" width="16" height="16" />
+                            <input id="code" type="text" placeholder="用输入验证码" onfocus="inputOnFocus(this)" onblur="inputOnblur(this)"/>
+                        </div>
+                        <button>获取验证码</button>
+                    </div>
+                </div>
+                <div style="height: 40px;">
+                    <p th:if="*{msg}" th:text="*{msg}" style="color: red;"></p>
+                    <input id="originUrl" name="originUrl" hidden th:field="*{originUrl}" placeholder="请输入密码"/>
+                </div>
+                <div class="form-submit">
+                    <label>
+                        <button type="submit">登录</button>
+                    </label>
+                </div>
             </form>
         </div>
     </div>

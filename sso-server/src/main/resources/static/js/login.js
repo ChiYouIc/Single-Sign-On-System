@@ -29,3 +29,16 @@ function login() {
         }
     })
 }
+
+function inputOnFocus(val) {
+    val.parentNode.className += " input-active";
+}
+
+function inputOnblur(val) {
+    let className = val.parentNode.className;
+    let classNameList = className.split(" ");
+
+    if (classNameList && classNameList.length > 1) {
+        val.parentNode.className = classNameList[0];
+    }
+}
