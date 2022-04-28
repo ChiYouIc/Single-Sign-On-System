@@ -58,6 +58,7 @@ public class SsoController extends BaseController {
             // 当前连接的用户认证无效
             userCacheService.delAuthKeyToken(authKey);
             model.addAttribute("loginParam", param);
+            model.addAttribute("app", param.getApp());
             return "index";
         }
         // token 验证失败 { jwtHelper.isVerify(token); }

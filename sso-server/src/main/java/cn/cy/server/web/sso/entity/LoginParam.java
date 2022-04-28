@@ -19,6 +19,8 @@ public class LoginParam {
     private String username;
     private String password;
     private String originUrl;
+    private String originUri;
+    private String app;
 
     private String msg;
 
