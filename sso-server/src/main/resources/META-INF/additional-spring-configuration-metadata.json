@@ -24,6 +24,14 @@
       "name": "sso-server.origin-password",
       "type": "java.lang.String",
       "description": "初始化密码."
+    },{
+      "name": "sso-server.user-cache-key",
+      "type": "java.lang.String",
+      "description": "用户缓存使用到的 key."
+    },{
+      "name": "sso-server.app-cache-key",
+      "type": "java.lang.String",
+      "description": "应用缓存使用到的 key."
     }
   ]
 }

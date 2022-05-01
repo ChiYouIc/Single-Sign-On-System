@@ -1,6 +1,7 @@
 package cn.cy.server.web.sso.controller;
 
 import cn.cy.mybatis.web.controller.BaseController;
+import cn.cy.server.cache.IAppCacheService;
 import cn.cy.server.cache.IUserCacheService;
 import cn.cy.server.core.JwtHelper;
 import cn.cy.server.core.exception.InvalidCodeException;
@@ -12,10 +13,7 @@ import cn.cy.sso.utils.UserUtil;
 import cn.cy.web.response.UnifiedReturn;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -31,6 +29,9 @@ public class AuthController extends BaseController {
     private IUserCacheService userCacheService;
 
     @Resource
+    private IAppCacheService appCacheService;
+
+    @Resource
     private JwtHelper jwtHelper;
 
     /**
@@ -39,19 +40,30 @@ public class AuthController extends BaseController {
      */
     @UnifiedReturn
     @GetMapping("/auth")
-    public SsoResult auth(String token) {
+    public SsoResult auth(@RequestParam(name = "token") String token, @RequestHeader(name = "appCode") String appCode) {
         SsoResult ssoResult = new SsoResult();
-        // 校验 token
-        if (StrUtil.isNotEmpty(token)) {
-            // 校验是否存在该 token
-            UserInfo userInfo = userCacheService.getUserInfo(token);
-            if (jwtHelper.isVerify(token) && ObjectUtil.isNotEmpty(userInfo)) {
-                ssoResult.setResult(SsoResult.Result.SUCCESS);
-                ssoResult.setUserInfo(userInfo);
-                return ssoResult;
-            }
-        }
         ssoResult.setResult(SsoResult.Result.FAIL);
+
+        // appCode 与 token 都不能为空
+        if (!StrUtil.isAllNotEmpty(token, appCode)) {
+            return ssoResult;
+        }
+
+        // 校验 appCode
+        String appName = appCacheService.getAppInfo(appCode);
+        if (StrUtil.isEmpty(appName)) {
+            return ssoResult;
+        }
+
+
+        // 校验 token
+        UserInfo userInfo = userCacheService.getUserInfo(token);
+        if (jwtHelper.isVerify(token) && ObjectUtil.isNotEmpty(userInfo)) {
+            ssoResult.setResult(SsoResult.Result.SUCCESS);
+            ssoResult.setUserInfo(userInfo);
+            return ssoResult;
+        }
+
         return ssoResult;
     }
 

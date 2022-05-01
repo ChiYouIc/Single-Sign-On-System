@@ -3,6 +3,8 @@ sso-core:
 
 sso-server:
   origin-password: "123456789"
+  user-cache-key: "user"
+  app-cache-key: "app"
   exclude:
     - /
     - /login

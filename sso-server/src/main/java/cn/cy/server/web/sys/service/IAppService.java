@@ -67,4 +67,12 @@ public interface IAppService {
      * @return 结果
      */
     public int closeApp(Long id);
+
+    /**
+     * 获取所有的 App 信息
+     *
+     * @return 所有 App
+     */
+    public List<App> selectAppAll();
+
 }

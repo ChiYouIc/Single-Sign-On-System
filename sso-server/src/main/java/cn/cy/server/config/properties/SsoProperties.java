@@ -25,4 +25,8 @@ public class SsoProperties {
     private List<String> exclude;
 
     private String originPassword;
+
+    private String userCacheKey;
+
+    private String appCacheKey;
 }

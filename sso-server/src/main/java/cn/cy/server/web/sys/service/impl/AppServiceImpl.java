@@ -35,6 +35,11 @@ public class AppServiceImpl implements IAppService {
     }
 
     @Override
+    public List<App> selectAppAll() {
+        return appMapper.selectAppAll();
+    }
+
+    @Override
     public int insertApp(App app) throws Exception {
         String appName = app.getAppName();
         byte[] desEncode = EncryptUtils.desEncode(appName.getBytes(StandardCharsets.UTF_8));

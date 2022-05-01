@@ -40,6 +40,10 @@
         where id = #{id}
     </select>
 
+    <select id="selectAppAll" resultMap="AppResultMap">
+        <include refid="AppSql"/>
+    </select>
+
     <insert id="insertApp" parameterType="App" useGeneratedKeys="true" keyColumn="id">
         insert into sso_app(app_code, app_name, sort, status, create_by, create_time, update_by, update_time)
         values (#{appCode},

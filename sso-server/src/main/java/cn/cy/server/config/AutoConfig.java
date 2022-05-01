@@ -39,6 +39,11 @@ public class AutoConfig implements WebMvcConfigurer {
     @Resource
     private TokenInvalidInterceptor tokenInvalidInterceptor;
 
+    /**
+     * 拦截器配置
+     *
+     * @param registry 拦截器注册器
+     */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         log.info("Add sso core interceptor TokenInvalidInterceptor.");
@@ -51,6 +56,11 @@ public class AutoConfig implements WebMvcConfigurer {
         exclude.forEach(s -> log.info("exclude path patterns: {}", s));
     }
 
+    /**
+     * 添加资源处理程序
+     *
+     * @param registry 资源注册器
+     */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler(ssoProperties.getResourcePath())
@@ -62,6 +72,11 @@ public class AutoConfig implements WebMvcConfigurer {
         return new JwtHelper(jwtProperties, SignatureAlgorithm.HS256);
     }
 
+    /**
+     * 提供给日志获取操作人
+     *
+     * @return IOperatorGetService
+     */
     @Bean
     public IOperatorGetService operatorGetService() {
         return () -> {

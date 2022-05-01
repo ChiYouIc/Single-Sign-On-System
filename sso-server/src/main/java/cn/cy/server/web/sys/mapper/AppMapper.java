@@ -32,6 +32,13 @@ public interface AppMapper {
     public App selectAppById(Long id);
 
     /**
+     * 获取所有 App 信息
+     *
+     * @return 列表
+     */
+    public List<App> selectAppAll();
+
+    /**
      * 新增应用
      *
      * @param app 应用
@@ -63,4 +70,5 @@ public interface AppMapper {
      * @return 结果
      */
     public int deleteAppByIds(Long... ids);
+
 }
