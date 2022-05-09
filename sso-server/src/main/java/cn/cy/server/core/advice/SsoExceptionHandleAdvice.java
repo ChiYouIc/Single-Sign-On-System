@@ -33,7 +33,7 @@ public class SsoExceptionHandleAdvice extends AbstractExceptionHandleAdvice impl
                 .build();
         LOGGER.error(e.getMessage());
         e.printStackTrace();
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(TokenExpiredException.class)
