@@ -31,9 +31,6 @@ public class AuthController extends BaseController {
     @Resource
     private IAppCacheService appCacheService;
 
-    @Resource
-    private JwtHelper jwtHelper;
-
     /**
      * 验证token 有效性接口，主要是提供给 Sso-client 调用，
      * 并且请求该接口不经过 TokenInvalidInterceptor（这个在拦截器配置文件中有声明）
@@ -58,7 +55,7 @@ public class AuthController extends BaseController {
 
         // 校验 token
         UserInfo userInfo = userCacheService.getUserInfo(token);
-        if (jwtHelper.isVerify(token) && ObjectUtil.isNotEmpty(userInfo)) {
+        if (JwtHelper.isVerify(token) && ObjectUtil.isNotEmpty(userInfo)) {
             ssoResult.setResult(SsoResult.Result.SUCCESS);
             ssoResult.setUserInfo(userInfo);
             return ssoResult;

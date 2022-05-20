@@ -34,9 +34,6 @@ public class AutoConfig implements WebMvcConfigurer {
     private SsoProperties ssoProperties;
 
     @Resource
-    private JwtProperties jwtProperties;
-
-    @Resource
     private TokenInvalidInterceptor tokenInvalidInterceptor;
 
     /**
@@ -65,11 +62,6 @@ public class AutoConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler(ssoProperties.getResourcePath())
                 .addResourceLocations("classpath:/static/");
-    }
-
-    @Bean
-    public JwtHelper jwtHelper() {
-        return new JwtHelper(jwtProperties, SignatureAlgorithm.HS256);
     }
 
     /**

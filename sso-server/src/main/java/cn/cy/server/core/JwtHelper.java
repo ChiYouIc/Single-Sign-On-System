@@ -1,5 +1,6 @@
 package cn.cy.server.core;
 
+import cn.cy.common.util.SpringUtil;
 import cn.cy.server.config.properties.JwtProperties;
 import cn.hutool.core.map.MapUtil;
 import com.auth0.jwt.JWT;
@@ -37,13 +38,18 @@ public class JwtHelper {
     /**
      * 生成签名时所使用的加密算法
      */
-    private final SignatureAlgorithm signatureAlgorithm;
+    private static final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS256;
 
-    public JwtHelper(JwtProperties properties, SignatureAlgorithm signatureAlgorithm) {
+    private JwtHelper() {
+        JwtProperties properties = SpringUtil.getBean(JwtProperties.class);
         this.iis = properties.getIss();
         this.expireTime = properties.getExpireTime();
         this.base64EncodedSecretKey = Base64.encodeBase64String(properties.getSecret().getBytes());
-        this.signatureAlgorithm = signatureAlgorithm;
+    }
+
+
+    private static JwtHelper instance() {
+        return JwtHelperHolder.INSTANCE;
     }
 
     /**
@@ -52,10 +58,10 @@ public class JwtHelper {
      * @param claims 将添加到载荷部分的信息，例如用户名，用户ID
      * @return token
      */
-    public String encode(DefaultClaims claims) {
+    public static String encode(DefaultClaims claims) {
         // 头信息
         Map<String, Object> headMap = MapUtil.newHashMap();
-        headMap.put("alg", signatureAlgorithm.getValue());
+        headMap.put("alg", SIGNATURE_ALGORITHM.getValue());
         headMap.put("type", "JWT");
 
         // 签发时间(iat)：载荷部分的标准字段之一
@@ -72,11 +78,11 @@ public class JwtHelper {
                 // 签发时间（iat）
                 .setIssuedAt(now)
                 // 签发人
-                .setSubject(this.iis)
+                .setSubject(instance().iis)
                 // 设置签名生成的算法和密钥
-                .signWith(signatureAlgorithm, base64EncodedSecretKey)
+                .signWith(SIGNATURE_ALGORITHM, instance().base64EncodedSecretKey)
                 // 过期时间（exp）
-                .setExpiration(new Date(nowMillis + expireTime))
+                .setExpiration(new Date(nowMillis + instance().expireTime))
                 .compact();
     }
 
@@ -88,12 +94,12 @@ public class JwtHelper {
      * @param jwtToken 加密后的 Token
      * @return claims 返回负荷部分的键值对
      */
-    public Claims decode(String jwtToken) {
-        this.isVerify(jwtToken);
+    public static Claims decode(String jwtToken) {
+        isVerify(jwtToken);
         // 得到 defaultParser
         return Jwts.parser()
                 // 设置签名的密钥
-                .setSigningKey(base64EncodedSecretKey)
+                .setSigningKey(instance().base64EncodedSecretKey)
                 // 设置需要解析的 jwt
                 .parseClaimsJws(jwtToken)
                 .getBody();
@@ -107,8 +113,8 @@ public class JwtHelper {
      * @param jwtToken 被校验的 jwt token
      * @return 是否通过
      */
-    public boolean isVerify(String jwtToken) {
-        Algorithm algorithm = Algorithm.HMAC256(Base64.decodeBase64(base64EncodedSecretKey));
+    public static boolean isVerify(String jwtToken) {
+        Algorithm algorithm = Algorithm.HMAC256(Base64.decodeBase64(instance().base64EncodedSecretKey));
         JWTVerifier verifier = JWT.require(algorithm).build();
 
         boolean verify = true;
@@ -122,6 +128,10 @@ public class JwtHelper {
         }
 
         return verify;
+    }
+
+    private static class JwtHelperHolder {
+        private static final JwtHelper INSTANCE = new JwtHelper();
     }
 
 }

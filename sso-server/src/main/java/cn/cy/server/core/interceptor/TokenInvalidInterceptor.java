@@ -22,9 +22,6 @@ import javax.servlet.http.HttpServletResponse;
 public class TokenInvalidInterceptor implements HandlerInterceptor, Ordered {
 
     @Resource
-    private JwtHelper jwtHelper;
-
-    @Resource
     private IUserCacheService userCacheService;
 
     /**
@@ -37,7 +34,7 @@ public class TokenInvalidInterceptor implements HandlerInterceptor, Ordered {
 
         // 验证 token 有效性
         UserInfo userInfo = userCacheService.getUserInfo(token);
-        if (jwtHelper.isVerify(token) && ObjectUtil.isNotEmpty(userInfo)) {
+        if (JwtHelper.isVerify(token) && ObjectUtil.isNotEmpty(userInfo)) {
             userInfo.setToken(token);
             SsoUtil.setInfo(userInfo);
             return true;

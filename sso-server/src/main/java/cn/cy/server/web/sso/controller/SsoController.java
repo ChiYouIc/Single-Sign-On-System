@@ -26,10 +26,6 @@ import javax.servlet.http.HttpSession;
  */
 @Controller
 public class SsoController extends BaseController {
-
-    @Resource
-    private JwtHelper jwtHelper;
-
     @Resource
     private ISsoService ssoService;
 
@@ -50,7 +46,7 @@ public class SsoController extends BaseController {
         try {
             // 如果用户已经登陆过，直接重新发布 code，用于获取 token 令牌
             String token = StrUtil.isAllNotEmpty(authKey, originUrl) ? userCacheService.getAuthKeyToken(authKey) : null;
-            if (StrUtil.isNotEmpty(token) && jwtHelper.isVerify(token)) {
+            if (StrUtil.isNotEmpty(token) && JwtHelper.isVerify(token)) {
                 String[] split = originUrl.split("\\?");
                 return "redirect:" + split[0] + "?code=" + ssoService.generateCode(token);
             }

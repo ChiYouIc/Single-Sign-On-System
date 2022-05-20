@@ -7,8 +7,6 @@ import cn.cy.server.web.sso.entity.LoginParam;
 import cn.cy.server.web.sso.entity.UserInfo;
 import cn.cy.server.web.sso.mapper.UserInfoMapper;
 import cn.cy.server.web.sso.service.ISsoService;
-import cn.cy.web.exception.ApiException;
-import cn.cy.web.response.ErrorCodeEnum;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
@@ -41,9 +39,6 @@ public class SsoServiceImpl implements ISsoService {
     @Resource
     private IUserCacheService userCacheService;
 
-    @Resource
-    private JwtHelper jwtHelper;
-
     @Override
     public boolean authentication(LoginParam param) {
         try {
@@ -65,7 +60,7 @@ public class SsoServiceImpl implements ISsoService {
         claims.put("userId", info.getUserId());
         claims.put("id", info.getId());
         // 获取 token
-        String token = jwtHelper.encode(claims);
+        String token = JwtHelper.encode(claims);
         info.setToken(token);
         info.setAuthKey(session.getId());
         // 保存 sessionId - token
