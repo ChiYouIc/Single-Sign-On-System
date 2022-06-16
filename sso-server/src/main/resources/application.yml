@@ -62,6 +62,7 @@ jwt:
 
 
 logging:
+#  config: classpath:logback-spring.xml
   level:
     #   配置打印sql到控制台
     root: info
