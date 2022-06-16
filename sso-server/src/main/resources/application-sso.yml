@@ -11,4 +11,5 @@ sso-server:
     - /error
     - /auth
     - /callback/**
+    - /client/path/**
     - /static/**

@@ -6,6 +6,7 @@ import cn.cy.server.cache.IUserCacheService;
 import cn.cy.server.core.JwtHelper;
 import cn.cy.server.core.exception.InvalidCodeException;
 import cn.cy.server.web.sso.entity.UserInfo;
+import cn.cy.sso.model.RequestPath;
 import cn.cy.sso.model.SsoResult;
 import cn.cy.sso.model.SsoUser;
 import cn.cy.sso.utils.SsoUtil;
@@ -13,15 +14,18 @@ import cn.cy.sso.utils.UserUtil;
 import cn.cy.web.response.UnifiedReturn;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author: 友叔
  * @Date: 2021/1/8 16:54
  * @Description: 认证Controller
  */
+@Slf4j
 @RestController
 public class AuthController extends BaseController {
 
@@ -91,6 +95,24 @@ public class AuthController extends BaseController {
     public String logout() {
         userCacheService.delAuthKeyToken(UserUtil.authKey());
         return "success";
+    }
+
+    @PostMapping("/client/path/{appCode}")
+    public boolean clientPath(@RequestBody List<RequestPath> pathList, @PathVariable("appCode") String appCode) {
+
+        if (StrUtil.isEmpty(appCode)) {
+            return false;
+        }
+
+        String appName = appCacheService.getAppInfo(appCode);
+        if (StrUtil.isEmpty(appName)) {
+            return false;
+        }
+
+        for (RequestPath path : pathList) {
+            log.info(path.toString());
+        }
+        return true;
     }
 
 }
