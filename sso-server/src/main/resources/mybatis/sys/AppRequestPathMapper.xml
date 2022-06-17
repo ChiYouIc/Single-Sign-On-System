@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.cy.server.web.sys.mapper.AppRequestPathMapper">
+
+    <resultMap id="requestPathResultMap" type="AppRequestPathInfo">
+        <id property="id" column="id"/>
+        <result property="appId" column="app_id"/>
+        <result property="url" column="url"/>
+        <result property="requestMethod" column="request_method"/>
+        <result property="handleMethod" column="handle_method"/>
+        <result property="paramCount" column="param_count"/>
+        <result property="createTime" column="create_time"/>
+        <result property="version" column="version"/>
+        <result property="status" column="status"/>
+    </resultMap>
+
+    <sql id="requestPathSql">
+        select id,
+               app_id,
+               url,
+               request_method,
+               handle_method,
+               param_count,
+               create_time,
+               version,
+               status
+        from sys_app_request_path
+    </sql>
+
+    <select id="selectAllRequestPathByAppId" resultMap="requestPathResultMap">
+        <include refid="requestPathSql"/>
+        where app_id = #{appId}
+    </select>
+
+    <insert id="insertRequestPathBatch" parameterType="java.util.List">
+        insert into sys_app_request_path(app_id, url, request_method, handle_method, param_count, create_time, version, status)
+        values
+        <foreach collection="list" item="l" separator=",">
+            (
+            #{l.appId},
+            #{l.url},
+            #{l.requestMethod},
+            #{l.handleMethod},
+            #{l.paramCount},
+            #{l.createTime},
+            #{l.version},
+            #{l.status}
+            )
+        </foreach>
+    </insert>
+
+    <update id="updateRequestPathBatch" parameterType="java.util.List">
+        <foreach collection="list" item="l">
+            update sys_app_request_path set handle_method = #{l.handleMethod}, param_count = #{l.paramCount}, version = #{l.version}, status = #{l.status} where id = #{l.id};
+        </foreach>
+    </update>
+
+    <update id="updateRequestPathStatusByIds" parameterType="java.util.Map">
+        update sys_app_request_path set status = #{status} where id in
+        <foreach collection="list" item="l" open="(" separator="," close=")">#{l}</foreach>
+    </update>
+
+</mapper>

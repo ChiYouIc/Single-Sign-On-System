@@ -24,7 +24,6 @@ public class CookieUtils {
 
     public static void addCookieValue(HttpServletResponse response, String key, String value) {
         Cookie cookie = new Cookie(key, value);
-        // cookie.setDomain("/");
         cookie.setHttpOnly(true);
         cookie.setMaxAge(3600000);
         response.addCookie(cookie);

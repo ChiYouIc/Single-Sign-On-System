@@ -44,6 +44,11 @@
         <include refid="AppSql"/>
     </select>
 
+    <select id="selectOneAppByAppCode" parameterType="java.lang.String" resultMap="AppResultMap">
+        <include refid="AppSql"/>
+        where app_code = #{appCode}
+    </select>
+
     <insert id="insertApp" parameterType="App" useGeneratedKeys="true" keyColumn="id">
         insert into sso_app(app_code, app_name, sort, status, create_by, create_time, update_by, update_time)
         values (#{appCode},

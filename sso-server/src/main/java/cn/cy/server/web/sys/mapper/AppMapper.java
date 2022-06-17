@@ -39,6 +39,14 @@ public interface AppMapper {
     public List<App> selectAppAll();
 
     /**
+     * 根据 appCode 查询应用
+     *
+     * @param appCode 应用码
+     * @return 应用
+     */
+    public App selectOneAppByAppCode(String appCode);
+
+    /**
      * 新增应用
      *
      * @param app 应用

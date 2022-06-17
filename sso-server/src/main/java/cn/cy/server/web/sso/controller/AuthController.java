@@ -6,6 +6,7 @@ import cn.cy.server.cache.IUserCacheService;
 import cn.cy.server.core.JwtHelper;
 import cn.cy.server.core.exception.InvalidCodeException;
 import cn.cy.server.web.sso.entity.UserInfo;
+import cn.cy.server.web.sys.service.IAppRequestPathService;
 import cn.cy.sso.model.RequestPath;
 import cn.cy.sso.model.SsoResult;
 import cn.cy.sso.model.SsoUser;
@@ -34,6 +35,9 @@ public class AuthController extends BaseController {
 
     @Resource
     private IAppCacheService appCacheService;
+
+    @Resource
+    private IAppRequestPathService requestPathService;
 
     /**
      * 验证token 有效性接口，主要是提供给 Sso-client 调用，
@@ -109,9 +113,7 @@ public class AuthController extends BaseController {
             return false;
         }
 
-        for (RequestPath path : pathList) {
-            log.info(path.toString());
-        }
+        requestPathService.insertAppRequestPath(appCode, pathList);
         return true;
     }
 
